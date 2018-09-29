@@ -33,6 +33,6 @@ public class WorldMap {
         return null;
     }
 
-    public void saveMap(java.lang.String filename) throws IOException {
+    public void saveMap(String filename) throws IOException {
     }
 }
