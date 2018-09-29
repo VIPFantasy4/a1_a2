@@ -39,26 +39,29 @@ public class Action {
         }
         if (line == null) return null;
 
-        line = line.trim();
+//        line = line.trim();
         String[] tokens = line.split(" ");
-        if (tokens.length == 0 || tokens.length > 2) {
-            throw new ActionFormatException();
-        }
+        if (tokens.length == 0 || tokens.length > 2) throw new ActionFormatException();
         int primaryAction;
-        try {
-            primaryAction = Integer.parseInt(tokens[0]);
-        } catch (NumberFormatException e) {
-            throw new ActionFormatException();
+        switch (tokens[0]) {
+            case "DIG": {
+                if (tokens.length != 1) throw new ActionFormatException();
+                return new Action(DIG, "");
+            }
+            case "MOVE_BLOCK":
+                primaryAction = MOVE_BLOCK;
+                break;
+            case "MOVE_BUILDER":
+                primaryAction = MOVE_BUILDER;
+                break;
+            case "DROP":
+                primaryAction = DROP;
+                break;
+            default:
+                throw new ActionFormatException();
         }
-        if (primaryAction == DIG) {
-            if (tokens.length != 1) throw new ActionFormatException();
-            return new Action(primaryAction, "");
-        } else if (primaryAction == MOVE_BLOCK || primaryAction == MOVE_BUILDER || primaryAction == DROP) {
-            if (tokens.length == 1) throw new ActionFormatException();
-            return new Action(primaryAction, tokens[1]);
-        } else {
-            throw new ActionFormatException();
-        }
+        if (tokens.length == 1) throw new ActionFormatException();
+        return new Action(primaryAction, tokens[1]);
     }
 
     public static void processAction(Action action, WorldMap map) {
@@ -139,5 +142,10 @@ public class Action {
     }
 
     public static void processActions(BufferedReader reader, WorldMap startingMap) throws ActionFormatException {
+        Action action = loadAction(reader);
+        if (action != null) {
+            processAction(action, startingMap);
+            processActions(reader, startingMap);
+        }
     }
 }
