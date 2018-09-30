@@ -1,10 +1,10 @@
 package a2;
 
+import csse2002.block.world.Block;
 import csse2002.block.world.Builder;
 import csse2002.block.world.Tile;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -16,6 +16,29 @@ public class WorldMap {
     private SparseTileArray sparseTileArray = new SparseTileArray();
 
     public WorldMap(String filename) throws WorldMapFormatException, WorldMapInconsistentException, FileNotFoundException {
+        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        int startingX;
+        int startingY;
+        String name;
+        List<Block> contents;
+        int n = 0;
+        boolean flag = false;
+        int i = 0;
+        while (true) {
+            i++;
+            String line;
+            try {
+                line = reader.readLine();
+            } catch (IOException e) {
+                throw new WorldMapFormatException();
+            }
+            if (line == null) break;
+            if ((line.startsWith("total") || line.startsWith("exits")) && !flag) throw new WorldMapFormatException();
+            if (flag && !line.startsWith("total") && !line.startsWith("exits")) throw new WorldMapFormatException();
+            if (flag = line.isEmpty()) continue;
+            String[] tokens = line.split(" ");
+            if (tokens.length == 0 || tokens.length > 2) throw new WorldMapFormatException();
+        }
     }
 
     public WorldMap(Tile startingTile, Position startPosition, Builder builder) throws WorldMapInconsistentException {

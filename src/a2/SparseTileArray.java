@@ -16,6 +16,7 @@ public class SparseTileArray {
         tiles = new LinkedList<>();
     }
 
+    // TODO:
     public void addLinkedTiles(Tile startingTile, int startingX, int startingY) throws WorldMapInconsistentException {
 //        Map<Position, Tile> map = new TreeMap<>();
         map.put(new Position(startingX, startingY), startingTile);
