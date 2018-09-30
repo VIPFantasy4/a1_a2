@@ -36,6 +36,9 @@ public class WorldMap {
             if ((line.startsWith("total") || line.startsWith("exits")) && !flag) throw new WorldMapFormatException();
             if (flag && !line.startsWith("total") && !line.startsWith("exits")) throw new WorldMapFormatException();
             if (flag = line.isEmpty()) continue;
+            boolean isProcessed = false;
+            // TODO: Switch(i)
+            if (isProcessed) continue;
             String[] tokens = line.split(" ");
             if (tokens.length == 0 || tokens.length > 2) throw new WorldMapFormatException();
         }
