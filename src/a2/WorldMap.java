@@ -33,11 +33,44 @@ public class WorldMap {
                 throw new WorldMapFormatException();
             }
             if (line == null) break;
-            if ((line.startsWith("total") || line.startsWith("exits")) && !flag) throw new WorldMapFormatException();
+            if ((line.startsWith("total") || line.startsWith("exits")) && (i < 6 || !flag))
+                throw new WorldMapFormatException();
             if (flag && !line.startsWith("total") && !line.startsWith("exits")) throw new WorldMapFormatException();
             if (flag = line.isEmpty()) continue;
             boolean isProcessed = false;
-            // TODO: Switch(i)
+            switch (i) {
+                case 1: {
+                    try {
+                        startingX = Integer.parseInt(line);
+                        isProcessed = true;
+                        break;
+                    } catch (NumberFormatException e) {
+                        throw new WorldMapFormatException();
+                    }
+                }
+                case 2: {
+                    try {
+                        startingY = Integer.parseInt(line);
+                        isProcessed = true;
+                        break;
+                    } catch (NumberFormatException e) {
+                        throw new WorldMapFormatException();
+                    }
+                }
+                case 3: {
+                    name = line;
+                    isProcessed = true;
+                    break;
+                }
+                case 4: {
+                    String[] tokens = line.split(",");
+                    if (tokens.length == 0) throw new WorldMapFormatException();
+                    for (String token : tokens) {
+                        if (!"grass".equals(token) && !"soil".equals(token) && !"wood".equals(token) && !"stone".equals(token))
+                            throw new WorldMapFormatException();
+                    }
+                }
+            }
             if (isProcessed) continue;
             String[] tokens = line.split(" ");
             if (tokens.length == 0 || tokens.length > 2) throw new WorldMapFormatException();
