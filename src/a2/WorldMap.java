@@ -83,6 +83,9 @@ public class WorldMap {
                         }
                     }
                 }
+                case 6: {
+                    if (!line.startsWith("total")) throw new WorldMapFormatException();
+                }
             }
             if (isProcessed) continue;
             String[] tokens = line.split(" ");
