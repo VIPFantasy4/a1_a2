@@ -82,6 +82,7 @@ public class WorldMap {
                                 throw new WorldMapFormatException();
                         }
                     }
+                    isProcessed = true;
                 }
                 case 6: {
                     if (!line.startsWith("total")) throw new WorldMapFormatException();
