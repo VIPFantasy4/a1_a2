@@ -1,10 +1,9 @@
 package a2;
 
-import csse2002.block.world.Block;
-import csse2002.block.world.Builder;
-import csse2002.block.world.Tile;
+import csse2002.block.world.*;
 
 import java.io.*;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ public class WorldMap {
         int startingX;
         int startingY;
         String name;
-        List<Block> contents;
+        List<Block> contents = new LinkedList<>();
         int n = 0;
         boolean flag = false;
         int i = 0;
@@ -66,8 +65,22 @@ public class WorldMap {
                     String[] tokens = line.split(",");
                     if (tokens.length == 0) throw new WorldMapFormatException();
                     for (String token : tokens) {
-                        if (!"grass".equals(token) && !"soil".equals(token) && !"wood".equals(token) && !"stone".equals(token))
-                            throw new WorldMapFormatException();
+                        switch (token) {
+                            case "grass":
+                                contents.add(new GrassBlock());
+                                break;
+                            case "soil":
+                                contents.add(new SoilBlock());
+                                break;
+                            case "wood":
+                                contents.add(new WoodBlock());
+                                break;
+                            case "stone":
+                                contents.add(new StoneBlock());
+                                break;
+                            default:
+                                throw new WorldMapFormatException();
+                        }
                     }
                 }
             }
