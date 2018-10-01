@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
  */
 public class Main {
     public static void main(String[] args) {
-        if (args.length != 3){
+        if (args.length != 3) {
             System.err.println("Usage: program inputMap actions outputMap");
             System.exit(1);
         }
@@ -22,9 +22,9 @@ public class Main {
             System.exit(2);
         }
         BufferedReader bufferedReader = null;
-        if ("System.in".equals(args[1])){
+        if ("System.in".equals(args[1])) {
             bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        }else {
+        } else {
             try {
                 bufferedReader = new BufferedReader(new FileReader(args[1]));
             } catch (Exception e) {
@@ -33,7 +33,7 @@ public class Main {
             }
         }
         try {
-            Action.processActions(bufferedReader,worldMap);
+            Action.processActions(bufferedReader, worldMap);
         } catch (ActionFormatException e) {
             System.err.println(e);
             System.exit(4);
