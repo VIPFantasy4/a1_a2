@@ -42,12 +42,10 @@ public class WorldMap {
                 if (i - 9 == n * 2 || i - 10 == n * 2) break;
                 throw new WorldMapFormatException();
             }
-            // TODO:
-//            if ((line.startsWith("total") || line.startsWith("exits")) && (i < 6 || !flag))
-//                throw new WorldMapFormatException();
             if ((line.startsWith("total") || line.startsWith("exits")) && matched) throw new WorldMapFormatException();
             if (flag && !line.startsWith("total") && !line.startsWith("exits")) throw new WorldMapFormatException();
-            if (line.isEmpty() && n != -1 && i - 7 != n && i - 9 != n * 2) throw new WorldMapFormatException();
+            if (line.isEmpty() && i < 5 || n != -4396 && i - 7 != n && i - 9 != n * 2)
+                throw new WorldMapFormatException();
             if (flag = line.isEmpty()) continue;
             boolean isProcessed = false;
             switch (i) {
@@ -98,6 +96,8 @@ public class WorldMap {
                     isProcessed = true;
                     break;
                 }
+                case 5:
+                    throw new WorldMapFormatException();
                 case 6: {
                     if (!line.startsWith("total")) throw new WorldMapFormatException();
                     String[] tokens = line.split(":");
