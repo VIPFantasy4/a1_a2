@@ -15,12 +15,14 @@ public class SparseTileArrayTest {
         Tile tile2 = new Tile();
         Tile tile3 = new Tile();
         Tile tile4 = new Tile();
+        Tile tile5 = new Tile();
         try {
             tile.addExit("north", tile1);
             tile.addExit("east", tile2);
             tile.addExit("south", tile3);
             tile.addExit("west", tile4);
             tile1.addExit("south", tile);
+            tile1.addExit("north", tile5);
         } catch (NoExitException e) {
             e.printStackTrace();
         }

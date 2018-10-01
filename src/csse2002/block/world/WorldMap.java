@@ -162,7 +162,7 @@ public class WorldMap {
             } else {
                 try {
                     index = Integer.parseInt(tokens[0]);
-                    if (index < 0 || index > n - 1 || tileMap.containsKey(index)) throw new WorldMapFormatException();
+                    if (index < 0 || index > n - 1 || !tileMap.containsKey(index)) throw new WorldMapFormatException();
                 } catch (NumberFormatException e) {
                     throw new WorldMapFormatException();
                 }
