@@ -5,6 +5,8 @@ import csse2002.block.world.*;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Administrator on 2018/9/28.
@@ -20,8 +22,13 @@ public class WorldMap {
         int startingY;
         String name;
         List<Block> contents = new LinkedList<>();
-        int n = 0;
+        Map<Integer, Tile> tileMap = new TreeMap<>();
+        Map<Integer, Tile> totalTileMap = new TreeMap<>();
+        List<Tile> tiles = new LinkedList<>();
+        Tile tile;
+        int n = -4396;
         boolean flag = false;
+        boolean matched = false;
         int i = 0;
         while (true) {
             i++;
@@ -31,10 +38,16 @@ public class WorldMap {
             } catch (IOException e) {
                 throw new WorldMapFormatException();
             }
-            if (line == null) break;
-            if ((line.startsWith("total") || line.startsWith("exits")) && (i < 6 || !flag))
+            if (line == null) {
+                if (i - 9 == n * 2 || i - 10 == n * 2) break;
                 throw new WorldMapFormatException();
+            }
+            // TODO:
+//            if ((line.startsWith("total") || line.startsWith("exits")) && (i < 6 || !flag))
+//                throw new WorldMapFormatException();
+            if ((line.startsWith("total") || line.startsWith("exits")) && matched) throw new WorldMapFormatException();
             if (flag && !line.startsWith("total") && !line.startsWith("exits")) throw new WorldMapFormatException();
+            if (line.isEmpty() && n != -1 && i - 7 != n && i - 9 != n * 2) throw new WorldMapFormatException();
             if (flag = line.isEmpty()) continue;
             boolean isProcessed = false;
             switch (i) {
@@ -83,14 +96,99 @@ public class WorldMap {
                         }
                     }
                     isProcessed = true;
+                    break;
                 }
                 case 6: {
                     if (!line.startsWith("total")) throw new WorldMapFormatException();
+                    String[] tokens = line.split(":");
+                    if (tokens.length != 2) throw new WorldMapFormatException();
+                    try {
+                        if ((n = Integer.parseInt(tokens[2])) < 0) throw new WorldMapFormatException();
+                        isProcessed = true;
+                    } catch (NumberFormatException e) {
+                        throw new WorldMapFormatException();
+                    }
                 }
             }
             if (isProcessed) continue;
+            if (i == n + 8) {
+                if (!line.equals("exits")) throw new WorldMapFormatException();
+                matched = true;
+                continue;
+            }
             String[] tokens = line.split(" ");
             if (tokens.length == 0 || tokens.length > 2) throw new WorldMapFormatException();
+            int index;
+            if (!matched) {
+                try {
+                    index = Integer.parseInt(tokens[0]);
+                    if (index < 0 || index > n - 1 || tileMap.containsKey(index)) throw new WorldMapFormatException();
+                } catch (NumberFormatException e) {
+                    throw new WorldMapFormatException();
+                }
+                List<Block> blocks = new LinkedList<>();
+                if (tokens.length == 2) {
+                    tokens = tokens[1].split(",");
+                    if (tokens.length == 0) throw new WorldMapFormatException();
+                    for (String token : tokens) {
+                        switch (token) {
+                            case "grass":
+                                blocks.add(new GrassBlock());
+                                break;
+                            case "soil":
+                                blocks.add(new SoilBlock());
+                                break;
+                            case "wood":
+                                blocks.add(new WoodBlock());
+                                break;
+                            case "stone":
+                                blocks.add(new StoneBlock());
+                                break;
+                            default:
+                                throw new WorldMapFormatException();
+                        }
+                    }
+                }
+                try {
+                    tileMap.put(index, new Tile(blocks));
+                } catch (TooHighException e) {
+                    throw new WorldMapFormatException();
+                }
+            } else {
+                try {
+                    index = Integer.parseInt(tokens[0]);
+                    if (index < 0 || index > n - 1 || tileMap.containsKey(index)) throw new WorldMapFormatException();
+                } catch (NumberFormatException e) {
+                    throw new WorldMapFormatException();
+                }
+                if (totalTileMap.containsKey(index)) throw new WorldMapFormatException();
+                if (tokens.length == 1) {
+                    totalTileMap.put(index, tileMap.get(index));
+                } else {
+                    tokens = tokens[1].split(",");
+                    if (tokens.length == 0) throw new WorldMapFormatException();
+                    for (String token : tokens) {
+                        String[] exits = token.split(":");
+                        if (exits.length != 2) throw new WorldMapFormatException();
+                        int tileIndex;
+                        try {
+                            tileIndex = Integer.parseInt(exits[1]);
+                        } catch (NumberFormatException e) {
+                            throw new WorldMapFormatException();
+                        }
+                        if (!tileMap.containsKey(tileIndex)) throw new WorldMapFormatException();
+                        if (!"north".equals(exits[0]) && !"east".equals(exits[0]) && !"south".equals(exits[0]) && !"west".equals(exits[0]))
+                            throw new WorldMapFormatException();
+                        if (tileMap.get(index).getExits().containsKey(exits[0])) throw new WorldMapFormatException();
+                        try {
+                            tileMap.get(index).addExit(exits[0], tileMap.get(tileIndex));
+                        } catch (NoExitException e) {
+                            throw new WorldMapFormatException();
+                        }
+                    }
+                    totalTileMap.put(index, tileMap.get(index));
+                }
+            }
         }
     }
 
