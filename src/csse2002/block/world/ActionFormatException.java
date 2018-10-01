@@ -1,7 +1,7 @@
 package csse2002.block.world;
 
 /**
- * Created by Administrator on 2018/9/28.
+ * An exception that indicates that an action is formatted incorrectly.
  */
 public class ActionFormatException extends Exception {
     public ActionFormatException() {

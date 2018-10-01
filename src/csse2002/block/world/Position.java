@@ -3,7 +3,7 @@ package csse2002.block.world;
 import java.util.Objects;
 
 /**
- * Created by Administrator on 2018/9/28.
+ * Represents the position of a Tile in the SparseTileArray
  */
 public class Position implements Comparable<Position> {
     private int x;

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Created by Administrator on 2018/9/28.
+ * Handles top-level interaction with performing actions on a WorldMap
  */
 public class Main {
     public static void main(String[] args) {

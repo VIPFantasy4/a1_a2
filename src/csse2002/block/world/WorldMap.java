@@ -1,10 +1,5 @@
 package csse2002.block.world;
 
-import a2.Position;
-import a2.SparseTileArray;
-import a2.WorldMapFormatException;
-import a2.WorldMapInconsistentException;
-
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,13 +7,48 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Created by Administrator on 2018/9/28.
+ * A class to store a world map
  */
 public class WorldMap {
     private Position position;
     private Builder builder;
-    private a2.SparseTileArray sparseTileArray = new SparseTileArray();
+    /*create a SparseTileArray as a member, and use the addLinkedTiles to populate it.*/
+    private SparseTileArray sparseTileArray = new SparseTileArray();
 
+    /**
+     * Construct a block world map from the given filename.
+     * abandon all hopes of irregular
+     *Note: Files may end with or without a single newline character, but there should not be any blank lines at the end of the file.
+     * Tile IDs are the ordering of tiles returned by getTiles()
+     * Tiles must have IDs bewteen 0 and N-1, where N is the number of tiles.
+     * The ordering does not need to be checked when loading a map (but the saveMap function below does when saving).
+     * Note: A blank line is required for an empty inventory, and lines with just an ID followed by a space are required for:
+     * A tile entry below "total:N", if the tile has no blocks
+     * A tile entry below "exits", if the tile has no exits
+     * The function should do the following:
+     * Open the filename and read a map in the format given above.
+     * Construct a new Builder with the name and inventory from the file (to be returned by getBuilder()), and a starting tile set to the tile with ID 0
+     * Construct a new Position for the starting position from the file to be returned as getStartPosition()
+     * Construct a Tile for each tile entry in the file (to be returned by getTiles() and getTile())
+     * Link each tile by the exits that are given.
+     * Throw a WorldMapFormatException if the format of the file is incorrect. This includes:
+     * Any lines are missing, including the blank lines before "total:N", and before exits
+     * startingX or startingY (lines 1 and 2) are not valid integers
+     * There are not N entries under the line that says "total:N"
+     * There are not N entries under the "exits" line (there should be exactly N entries and then the file should end.)
+     * N is not a valid integer, or N is negative
+     * The names of blocks in inventory and on tiles are not one of "grass", "soil", "wood", "stone"
+     * The names of exits in the "exits" sections are not one of "north", "east", "south", "west"
+     * The ids of tiles are not valid integers, are less than 0 or greater than N - 1
+     * The ids that the exits refer to do not exist in the list of tiles
+     * loaded tiles contain too many blocks, or GroundBlocks that have an index that is too highA file operation throws an IOException that is not a FileNotFoundException
+     * Throw a WorldMapInconsistentException if the format is correct, but tiles would end up in geometrically impossible locations (see SparseTileArray.addLinkedTiles()).
+     * Throw a FileNotFoundException if the file does not exist.
+     * @param filename
+     * @throws WorldMapFormatException
+     * @throws WorldMapInconsistentException
+     * @throws FileNotFoundException
+     */
     public WorldMap(String filename) throws WorldMapFormatException, WorldMapInconsistentException, FileNotFoundException {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         int startingX = -4396;
@@ -205,6 +235,14 @@ public class WorldMap {
         sparseTileArray.addLinkedTiles(tile, startingX, startingY);
     }
 
+    /**
+     * Constructs a new block world map from a startingTile, position and builder,
+     * such that getBuilder() == builder, getStartPosition() == startPosition, and getTiles() returns a list of tiles that are linked to startingTile.
+     * @param startingTile
+     * @param startPosition
+     * @param builder
+     * @throws WorldMapInconsistentException
+     */
     public WorldMap(Tile startingTile, Position startPosition, Builder builder) throws WorldMapInconsistentException {
         this.position = startPosition;
         this.builder = builder;
@@ -228,6 +266,11 @@ public class WorldMap {
         return sparseTileArray.getTiles();
     }
 
+    /**
+     * save the map in a text file as its load
+     * @param filename
+     * @throws IOException
+     */
     public void saveMap(String filename) throws IOException {
         String enter = "\r\n";
         Position position = getStartPosition();

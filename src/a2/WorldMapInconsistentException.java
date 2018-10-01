@@ -3,7 +3,7 @@ package a2;
 import csse2002.block.world.BlockWorldException;
 
 /**
- * Created by Administrator on 2018/9/28.
+ * A World Map file is geometrically inconsistent.
  */
 public class WorldMapInconsistentException extends BlockWorldException {
     public WorldMapInconsistentException() {
