@@ -4,6 +4,7 @@ import csse2002.block.world.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Represents an Action which can be performed on the block world (also called world map).
@@ -160,8 +161,9 @@ public class Action {
                     break;
                 } else {
                     try {
-                        // TODO:
-                        builder.moveTo(null);
+                        Tile tile = builder.getCurrentTile();
+                        Map<String,Tile> exits = tile.getExits();
+                        builder.moveTo(exits.get(secondaryAction));
                     } catch (NoExitException e) {
                         System.out.println("No exit this way");
                         break;
