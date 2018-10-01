@@ -25,7 +25,9 @@ public class SparseTileArrayTest {
             e.printStackTrace();
         }
         try {
-            new SparseTileArray().addLinkedTiles(tile, 0, 0);
+            SparseTileArray sparseTileArray = new SparseTileArray();
+            sparseTileArray.addLinkedTiles(tile, 0, 0);
+
         } catch (WorldMapInconsistentException e) {
             e.printStackTrace();
         }

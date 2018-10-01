@@ -44,7 +44,7 @@ public class WorldMap {
             }
             if ((line.startsWith("total") || line.startsWith("exits")) && matched) throw new WorldMapFormatException();
             if (flag && !line.startsWith("total") && !line.startsWith("exits")) throw new WorldMapFormatException();
-            if (line.isEmpty() && i != 4 && i < 5 || n != -4396 && i - 7 != n && i - 9 != n * 2)
+            if (line.isEmpty() && (i != 4 && (i < 5 || n != -4396 && i - 7 != n && i - 9 != n * 2)))
                 throw new WorldMapFormatException();
             if (i != 4 && (flag = line.isEmpty())) continue;
             boolean isProcessed = false;
