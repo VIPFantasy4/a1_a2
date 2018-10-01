@@ -112,8 +112,7 @@ public class Action {
                 if (flag) {
                     Tile tile = builder.getCurrentTile();
                     try {
-                        // TODO:
-                        tile.moveBlock(null);
+                        tile.moveBlock(secondaryAction);
                     } catch (TooHighException e) {
                         System.out.println("Too high");
                         break;
