@@ -236,7 +236,7 @@ public class WorldMap {
         builder.getInventory().forEach(block -> sb.append(block.getBlockType() + ","));
         if (builder.getInventory().size() > 0) sb.deleteCharAt(sb.length() - 1);
         sb.append(enter).append(enter).append(enter).append("total:").append(tileList.size()).append(enter);
-        for (int i = 0; i < tileList.size(); i++){
+        for (int i = 0; i < tileList.size(); i++) {
             sb.append(i + " ");
             List<Block> blocks = tileList.get(i).getBlocks();
             blocks.forEach(block -> sb.append(block.getBlockType() + ","));
@@ -244,23 +244,23 @@ public class WorldMap {
             sb.append(enter);
         }
         sb.append(enter + enter).append("exits").append(enter);
-        for (int i = 0; i < tileList.size(); i++){
+        for (int i = 0; i < tileList.size(); i++) {
             sb.append(i + " ");
             Map<String, Tile> map = tileList.get(i).getExits();
             boolean flag = false;
-            if (map.containsKey("east")){
+            if (map.containsKey("east")) {
                 sb.append("east:" + tileList.indexOf(map.containsKey("east")) + ",");
                 flag = true;
             }
-            if (map.containsKey("north")){
+            if (map.containsKey("north")) {
                 sb.append("north:" + tileList.indexOf(map.containsKey("north")) + ",");
                 flag = true;
             }
-            if (map.containsKey("west")){
+            if (map.containsKey("west")) {
                 sb.append("west:" + tileList.indexOf(map.containsKey("west")) + ",");
                 flag = true;
             }
-            if (map.containsKey("south")){
+            if (map.containsKey("south")) {
                 sb.append("south:" + tileList.indexOf(map.containsKey("south")) + ",");
                 flag = true;
             }
