@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class SparseTileArrayTest {
     @Test
-    public void testAddLinkedTiles() {
+    public void testAddLinkedTiles1() {
         Tile tile = new Tile();
         Tile tile1 = new Tile();
         Tile tile2 = new Tile();
@@ -44,5 +44,24 @@ public class SparseTileArrayTest {
         Assert.assertEquals(3, list.indexOf(tile3));
         Assert.assertEquals(4, list.indexOf(tile4));
         Assert.assertEquals(5, list.indexOf(tile5));
+    }
+
+    @Test
+    public void testAddLinkedTiles2() {
+        Tile tile = new Tile();
+        Tile tile1 = new Tile();
+        Tile tile2 = new Tile();
+        try {
+            tile.addExit("north", tile1);
+            tile1.addExit("south", tile2);
+        } catch (NoExitException e) {
+            e.printStackTrace();
+        }
+        try {
+            SparseTileArray sparseTileArray = new SparseTileArray();
+            sparseTileArray.addLinkedTiles(tile, 0, 0);
+        } catch (Exception e) {
+            Assert.assertEquals("NoExitException", e.toString());
+        }
     }
 }
