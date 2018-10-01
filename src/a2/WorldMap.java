@@ -226,5 +226,50 @@ public class WorldMap {
     }
 
     public void saveMap(String filename) throws IOException {
+        String enter = "\r\n";
+        Position position = getStartPosition();
+        Builder builder = getBuilder();
+        List<Tile> tileList = getTiles();
+        StringBuffer sb = new StringBuffer();
+        sb.append(position.getX()).append(enter).append(position.getY()).append(enter)
+                .append(builder.getName()).append(enter);
+        builder.getInventory().forEach(block -> sb.append(block.getBlockType() + ","));
+        if (builder.getInventory().size() > 0) sb.deleteCharAt(sb.length() - 1);
+        sb.append(enter).append(enter).append(enter).append("total:").append(tileList.size()).append(enter);
+        for (int i = 0; i < tileList.size(); i++){
+            sb.append(i + " ");
+            List<Block> blocks = tileList.get(i).getBlocks();
+            blocks.forEach(block -> sb.append(block.getBlockType() + ","));
+            if (blocks.size() > 0) sb.deleteCharAt(sb.length() - 1);
+            sb.append(enter);
+        }
+        sb.append(enter + enter).append("exits").append(enter);
+        for (int i = 0; i < tileList.size(); i++){
+            sb.append(i + " ");
+            Map<String, Tile> map = tileList.get(i).getExits();
+            boolean flag = false;
+            if (map.containsKey("east")){
+                sb.append("east:" + tileList.indexOf(map.containsKey("east")) + ",");
+                flag = true;
+            }
+            if (map.containsKey("north")){
+                sb.append("north:" + tileList.indexOf(map.containsKey("north")) + ",");
+                flag = true;
+            }
+            if (map.containsKey("west")){
+                sb.append("west:" + tileList.indexOf(map.containsKey("west")) + ",");
+                flag = true;
+            }
+            if (map.containsKey("south")){
+                sb.append("south:" + tileList.indexOf(map.containsKey("south")) + ",");
+                flag = true;
+            }
+            if (flag) sb.deleteCharAt(sb.length() - 1);
+            sb.append(enter);
+        }
+        BufferedOutputStream buffOut = new BufferedOutputStream(new FileOutputStream(new File(filename)));
+        buffOut.write(sb.toString().getBytes());
+        buffOut.flush();
+        buffOut.close();
     }
 }
