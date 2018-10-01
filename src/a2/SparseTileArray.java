@@ -28,14 +28,15 @@ public class SparseTileArray {
         targets.offer(startingTile);
         try {
             while (!targets.isEmpty()) {
-                Tile target = targets.poll();
-                Map<String, Tile> exits = target.getExits();
-                int x = rMap.get(target).getX();
-                int y = rMap.get(target).getY();
+                Tile tile = targets.poll();
+                Map<String, Tile> exits = tile.getExits();
+                int x = rMap.get(tile).getX();
+                int y = rMap.get(tile).getY();
+                Tile target;
                 if ((target = exits.get("north")) != null) {
                     Position p = new Position(x, y - 1);
                     if (tiles.lastIndexOf(target) == -1) {
-                        if (map.get(p) != null || !target.equals(target.getExits().get("south")) && target.getExits().get("south") != null)
+                        if (map.get(p) != null || !tile.equals(target.getExits().get("south")) && target.getExits().get("south") != null)
                             throw new WorldMapInconsistentException();
                         map.put(p, target);
                         rMap.put(target, p);
@@ -48,7 +49,7 @@ public class SparseTileArray {
                 if ((target = exits.get("east")) != null) {
                     Position p = new Position(x + 1, y);
                     if (tiles.lastIndexOf(target) == -1) {
-                        if (map.get(p) != null || !target.equals(target.getExits().get("west")) && target.getExits().get("west") != null)
+                        if (map.get(p) != null || !tile.equals(target.getExits().get("west")) && target.getExits().get("west") != null)
                             throw new WorldMapInconsistentException();
                         map.put(p, target);
                         rMap.put(target, p);
@@ -61,7 +62,7 @@ public class SparseTileArray {
                 if ((target = exits.get("south")) != null) {
                     Position p = new Position(x, y + 1);
                     if (tiles.lastIndexOf(target) == -1) {
-                        if (map.get(p) != null || !target.equals(target.getExits().get("north")) && target.getExits().get("north") != null)
+                        if (map.get(p) != null || !tile.equals(target.getExits().get("north")) && target.getExits().get("north") != null)
                             throw new WorldMapInconsistentException();
                         map.put(p, target);
                         rMap.put(target, p);
@@ -74,7 +75,7 @@ public class SparseTileArray {
                 if ((target = exits.get("west")) != null) {
                     Position p = new Position(x - 1, y);
                     if (tiles.lastIndexOf(target) == -1) {
-                        if (map.get(p) != null || !target.equals(target.getExits().get("east")) && target.getExits().get("east") != null)
+                        if (map.get(p) != null || !tile.equals(target.getExits().get("east")) && target.getExits().get("east") != null)
                             throw new WorldMapInconsistentException();
                         map.put(p, target);
                         rMap.put(target, p);
