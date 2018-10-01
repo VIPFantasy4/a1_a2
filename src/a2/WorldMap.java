@@ -18,9 +18,9 @@ public class WorldMap {
 
     public WorldMap(String filename) throws WorldMapFormatException, WorldMapInconsistentException, FileNotFoundException {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
-        int startingX;
-        int startingY;
-        String name;
+        int startingX = -4396;
+        int startingY = -4396;
+        String name = null;
         List<Block> contents = new LinkedList<>();
         Map<Integer, Tile> tileMap = new TreeMap<>();
         Map<Integer, Tile> totalTileMap = new TreeMap<>();
@@ -44,9 +44,9 @@ public class WorldMap {
             }
             if ((line.startsWith("total") || line.startsWith("exits")) && matched) throw new WorldMapFormatException();
             if (flag && !line.startsWith("total") && !line.startsWith("exits")) throw new WorldMapFormatException();
-            if (line.isEmpty() && i < 5 || n != -4396 && i - 7 != n && i - 9 != n * 2)
+            if (line.isEmpty() && i != 4 && i < 5 || n != -4396 && i - 7 != n && i - 9 != n * 2)
                 throw new WorldMapFormatException();
-            if (flag = line.isEmpty()) continue;
+            if (i != 4 && (flag = line.isEmpty())) continue;
             boolean isProcessed = false;
             switch (i) {
                 case 1: {
@@ -73,24 +73,26 @@ public class WorldMap {
                     break;
                 }
                 case 4: {
-                    String[] tokens = line.split(",");
-                    if (tokens.length == 0) throw new WorldMapFormatException();
-                    for (String token : tokens) {
-                        switch (token) {
-                            case "grass":
-                                contents.add(new GrassBlock());
-                                break;
-                            case "soil":
-                                contents.add(new SoilBlock());
-                                break;
-                            case "wood":
-                                contents.add(new WoodBlock());
-                                break;
-                            case "stone":
-                                contents.add(new StoneBlock());
-                                break;
-                            default:
-                                throw new WorldMapFormatException();
+                    if (!line.isEmpty()) {
+                        String[] tokens = line.split(",");
+                        if (tokens.length == 0) throw new WorldMapFormatException();
+                        for (String token : tokens) {
+                            switch (token) {
+                                case "grass":
+                                    contents.add(new GrassBlock());
+                                    break;
+                                case "soil":
+                                    contents.add(new SoilBlock());
+                                    break;
+                                case "wood":
+                                    contents.add(new WoodBlock());
+                                    break;
+                                case "stone":
+                                    contents.add(new StoneBlock());
+                                    break;
+                                default:
+                                    throw new WorldMapFormatException();
+                            }
                         }
                     }
                     isProcessed = true;
@@ -190,6 +192,14 @@ public class WorldMap {
                 }
             }
         }
+        tile = totalTileMap.get(0);
+        this.position = new Position(startingX, startingY);
+        try {
+            this.builder = new Builder(name, tile, contents);
+        } catch (InvalidBlockException e) {
+            throw new WorldMapFormatException();
+        }
+        sparseTileArray.addLinkedTiles(tile, startingX, startingY);
     }
 
     public WorldMap(Tile startingTile, Position startPosition, Builder builder) throws WorldMapInconsistentException {
