@@ -12,116 +12,85 @@ public class SparseTileArray {
     private List<Tile> tiles;
 
     public SparseTileArray() {
-        map = new LinkedHashMap<>();
+        map = new TreeMap<>();
         tiles = new LinkedList<>();
     }
 
-    public void addLinkedTiles(Tile startingTile, int startingX, int startingY) throws WorldMapInconsistentException{
+    public void addLinkedTiles(Tile startingTile, int startingX, int startingY) throws WorldMapInconsistentException {
         map.clear();
         tiles.clear();
-        map.put(new Position(startingX, startingY), startingTile);
+        Map<Tile, Position> rMap = new LinkedHashMap<>();
+        Position position = new Position(startingX, startingY);
+        map.put(position, startingTile);
+        rMap.put(startingTile, position);
         tiles.add(startingTile);
-        Tile targetN;
-        Tile targetE;
-        Tile targetS;
-        Tile targetW;
-        Queue<Tile> queue = new LinkedList<Tile>();
-        queue.offer(startingTile);
+        Queue<Tile> targets = new LinkedList<>();
+        targets.offer(startingTile);
         try {
-            while(!queue.isEmpty()){
-                Position position = null;
-                Tile currentTile = queue.poll();
-                for(Position key: map.keySet()){
-                    if(map.get(key).equals(currentTile)){
-                        position = key;
-                        break;
+            while (!targets.isEmpty()) {
+                Tile target = targets.poll();
+                Map<String, Tile> exits = target.getExits();
+                int x = rMap.get(target).getX();
+                int y = rMap.get(target).getY();
+                if ((target = exits.get("north")) != null) {
+                    Position p = new Position(x, y - 1);
+                    if (tiles.lastIndexOf(target) == -1) {
+                        if (map.get(p) != null || !target.equals(target.getExits().get("south")) && target.getExits().get("south") != null)
+                            throw new WorldMapInconsistentException();
+                        map.put(p, target);
+                        rMap.put(target, p);
+                        tiles.add(target);
+                        targets.offer(target);
+                    } else {
+                        if (rMap.get(target).compareTo(p) != 0) throw new WorldMapInconsistentException();
                     }
                 }
-                int x = position.getX();
-                int y = position.getY();
-                Map<String, Tile> exits = currentTile.getExits();
-                if ((targetN = exits.get("north")) != null) {
-                    if (!targetN.equals(targetN.getExits().get("south")) && targetN.getExits().get("south") != null)
-                        throw new WorldMapInconsistentException();
-                    queue.offer(targetN);
-                    map.put(new Position(x, y - 1), targetN);
-                    tiles.add(targetN);
+                if ((target = exits.get("east")) != null) {
+                    Position p = new Position(x + 1, y);
+                    if (tiles.lastIndexOf(target) == -1) {
+                        if (map.get(p) != null || !target.equals(target.getExits().get("west")) && target.getExits().get("west") != null)
+                            throw new WorldMapInconsistentException();
+                        map.put(p, target);
+                        rMap.put(target, p);
+                        tiles.add(target);
+                        targets.offer(target);
+                    } else {
+                        if (rMap.get(target).compareTo(p) != 0) throw new WorldMapInconsistentException();
+                    }
                 }
-                if ((targetE = exits.get("east")) != null) {
-                    if (!targetE.equals(targetE.getExits().get("west")) && targetE.getExits().get("west") != null)
-                        throw new WorldMapInconsistentException();
-                    queue.offer(targetE);
-                    map.put(new Position(x + 1, y), targetE);
-                    tiles.add(targetE);
+                if ((target = exits.get("south")) != null) {
+                    Position p = new Position(x, y + 1);
+                    if (tiles.lastIndexOf(target) == -1) {
+                        if (map.get(p) != null || !target.equals(target.getExits().get("north")) && target.getExits().get("north") != null)
+                            throw new WorldMapInconsistentException();
+                        map.put(p, target);
+                        rMap.put(target, p);
+                        tiles.add(target);
+                        targets.offer(target);
+                    } else {
+                        if (rMap.get(target).compareTo(p) != 0) throw new WorldMapInconsistentException();
+                    }
                 }
-                if ((targetS = exits.get("south")) != null) {
-                    if (!targetS.equals(targetS.getExits().get("north")) && targetS.getExits().get("north") != null)
-                        throw new WorldMapInconsistentException();
-                    queue.offer(targetE);
-                    map.put(new Position(x, y + 1), targetS);
-                    tiles.add(targetS);
-                }
-                if ((targetW = exits.get("west")) != null) {
-                    if (!targetW.equals(targetW.getExits().get("east")) && targetW.getExits().get("east") != null)
-                        throw new WorldMapInconsistentException();
-                    queue.offer(targetE);
-                    map.put(new Position(x - 1, y), targetW);
-                    tiles.add(targetW);
+                if ((target = exits.get("west")) != null) {
+                    Position p = new Position(x - 1, y);
+                    if (tiles.lastIndexOf(target) == -1) {
+                        if (map.get(p) != null || !target.equals(target.getExits().get("east")) && target.getExits().get("east") != null)
+                            throw new WorldMapInconsistentException();
+                        map.put(p, target);
+                        rMap.put(target, p);
+                        tiles.add(target);
+                        targets.offer(target);
+                    } else {
+                        if (rMap.get(target).compareTo(p) != 0) throw new WorldMapInconsistentException();
+                    }
                 }
             }
-        }catch (WorldMapInconsistentException e){
+        } catch (WorldMapInconsistentException e) {
             map.clear();
             tiles.clear();
             throw new WorldMapInconsistentException();
         }
     }
-
-    // TODO:
-//    public void addLinkedTiles(Tile startingTile, int startingX, int startingY) throws WorldMapInconsistentException {
-////        Map<Position, Tile> map = new TreeMap<>();
-//        map.put(new Position(startingX, startingY), startingTile);
-//        tiles.add(startingTile);
-//        Map<String, Tile> exits = startingTile.getExits();
-//        Tile targetN;
-//        Tile targetE;
-//        Tile targetS;
-//        Tile targetW;
-//        List<Tile> targets = new LinkedList<>();
-//        try {
-//            if ((targetN = exits.get("north")) != null) {
-//                if (!targetN.equals(targetN.getExits().get("south")) && targetN.getExits().get("south") != null)
-//                    throw new WorldMapInconsistentException();
-//                map.put(new Position(startingX, startingY - 1), targetN);
-//                tiles.add(targetN);
-//                targets.add(targetN);
-//            }
-//            if ((targetE = exits.get("east")) != null) {
-//                if (!targetE.equals(targetE.getExits().get("west")) && targetE.getExits().get("west") != null)
-//                    throw new WorldMapInconsistentException();
-//                map.put(new Position(startingX + 1, startingY), targetE);
-//                tiles.add(targetE);
-//                targets.add(targetE);
-//            }
-//            if ((targetS = exits.get("south")) != null) {
-//                if (!targetS.equals(targetS.getExits().get("north")) && targetS.getExits().get("north") != null)
-//                    throw new WorldMapInconsistentException();
-//                map.put(new Position(startingX, startingY + 1), targetS);
-//                tiles.add(targetS);
-//                targets.add(targetS);
-//            }
-//            if ((targetW = exits.get("west")) != null) {
-//                if (!targetW.equals(targetW.getExits().get("east")) && targetW.getExits().get("east") != null)
-//                    throw new WorldMapInconsistentException();
-//                map.put(new Position(startingX - 1, startingY), targetW);
-//                tiles.add(targetW);
-//                targets.add(targetW);
-//            }
-//        } catch (WorldMapInconsistentException e) {
-//            map.clear();
-//            tiles.clear();
-//            throw new WorldMapInconsistentException();
-//        }
-//    }
 
     public Tile getTile(Position position) {
         return map.get(position);
