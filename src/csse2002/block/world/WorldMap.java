@@ -1,6 +1,9 @@
-package a2;
+package csse2002.block.world;
 
-import csse2002.block.world.*;
+import a2.Position;
+import a2.SparseTileArray;
+import a2.WorldMapFormatException;
+import a2.WorldMapInconsistentException;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -14,7 +17,7 @@ import java.util.TreeMap;
 public class WorldMap {
     private Position position;
     private Builder builder;
-    private SparseTileArray sparseTileArray = new SparseTileArray();
+    private a2.SparseTileArray sparseTileArray = new SparseTileArray();
 
     public WorldMap(String filename) throws WorldMapFormatException, WorldMapInconsistentException, FileNotFoundException {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
