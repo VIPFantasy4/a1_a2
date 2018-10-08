@@ -23,9 +23,9 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/10/8.
  */
-public class FXDemo extends Application {
+public class FXSample extends Application {
     public static void main(String[] args) {
-        launch(FXDemo.class, args);
+        launch(FXSample.class, args);
     }
 
     @Override
