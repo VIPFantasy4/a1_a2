@@ -2,12 +2,13 @@ package csse2002.block.world;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Represents an Action which can be performed on the block world (also called world map).
  * An action is something that a builder can do on a tile in the block world.
  * The actions include, moving the builder in a direction, moving a block in a direction, digging on the current tile the builder is standing on and dropping an item from a builder's inventory.
-*/
+ */
 public class Action {
     /*DIG action which is represented by integer 2*/
     public static final int DIG = 2;
@@ -24,6 +25,7 @@ public class Action {
     /**
      * Create an Action that represents a manipulation of the blockworld.
      * An action is represented by a primary action (one of MOVE_BUILDER, MOVE_BLOCK, DIG or DROP), and a secondary action
+     *
      * @param primaryAction
      * @param secondaryAction
      */
@@ -33,7 +35,6 @@ public class Action {
     }
 
     /**
-     *
      * @return primaryAction
      */
     public int getPrimaryAction() {
@@ -41,7 +42,6 @@ public class Action {
     }
 
     /**
-     *
      * @return secondaryAction
      */
     public String getSecondaryAction() {
@@ -52,6 +52,7 @@ public class Action {
      * Create a single Action if possible from the given reader.
      * Read a line from the given reader and load the Action on that line. Only load one Action and return the created action.
      * Each line consists of a primary action, and optionally a secondary action.
+     *
      * @param reader
      * @return new Action instance according to line
      * @throws ActionFormatException
@@ -92,6 +93,7 @@ public class Action {
 
     /**
      * Perform the given action on a WorldMap, and print output to System.out. After this method finishes, map should be updated.
+     *
      * @param action
      * @param map
      */
@@ -158,8 +160,9 @@ public class Action {
                     break;
                 } else {
                     try {
-                        // TODO:
-                        builder.moveTo(null);
+                        Tile tile = builder.getCurrentTile();
+                        Map<String, Tile> exits = tile.getExits();
+                        builder.moveTo(exits.get(secondaryAction));
                     } catch (NoExitException e) {
                         System.out.println("No exit this way");
                         break;
@@ -180,6 +183,7 @@ public class Action {
      * Each message should be printed on a new line (Use System.out.println()).
      * Each action is listed on a single line, and one file can contain multiple actions.
      * Each action must be processed after it is read
+     *
      * @param reader
      * @param startingMap
      * @throws ActionFormatException

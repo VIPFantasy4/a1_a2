@@ -32,6 +32,7 @@ public class SparseTileArray {
      * tile1.getExits().get("north").getExits().get("north") == tile1. tile1 exits in two different places in this case.
      * getTiles() should return a list of each accessible tile in a breadth-first search order (see getTiles())
      * If an exception is thrown, reset the state of the SparseTileArray such that getTile(new Position(x, y)) returns null for any x and y.
+     *
      * @param startingTile
      * @param startingX
      * @param startingY
@@ -116,6 +117,7 @@ public class SparseTileArray {
 
     /**
      * Get the tile at position at (x, y), given by position.getX() and position.getY()
+     *
      * @param position
      * @return tile at position or null if there is no tile at (x, y).
      */
@@ -125,6 +127,7 @@ public class SparseTileArray {
 
     /**
      * Get a set of ordered tiles from SparseTileArray in breadth-first-search order.
+     *
      * @return a breadth-first-search list
      */
     public List<Tile> getTiles() {

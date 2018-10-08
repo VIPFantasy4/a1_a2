@@ -20,7 +20,7 @@ public class WorldMap {
     /**
      * Construct a block world map from the given filename.
      * abandon all hopes of irregular
-     *Note: Files may end with or without a single newline character, but there should not be any blank lines at the end of the file.
+     * Note: Files may end with or without a single newline character, but there should not be any blank lines at the end of the file.
      * Tile IDs are the ordering of tiles returned by getTiles()
      * Tiles must have IDs bewteen 0 and N-1, where N is the number of tiles.
      * The ordering does not need to be checked when loading a map (but the saveMap function below does when saving).
@@ -46,6 +46,7 @@ public class WorldMap {
      * loaded tiles contain too many blocks, or GroundBlocks that have an index that is too highA file operation throws an IOException that is not a FileNotFoundException
      * Throw a WorldMapInconsistentException if the format is correct, but tiles would end up in geometrically impossible locations (see SparseTileArray.addLinkedTiles()).
      * Throw a FileNotFoundException if the file does not exist.
+     *
      * @param filename
      * @throws WorldMapFormatException
      * @throws WorldMapInconsistentException
@@ -240,6 +241,7 @@ public class WorldMap {
     /**
      * Constructs a new block world map from a startingTile, position and builder,
      * such that getBuilder() == builder, getStartPosition() == startPosition, and getTiles() returns a list of tiles that are linked to startingTile.
+     *
      * @param startingTile
      * @param startPosition
      * @param builder
@@ -270,6 +272,7 @@ public class WorldMap {
 
     /**
      * save the map in a text file as its load
+     *
      * @param filename
      * @throws IOException
      */
