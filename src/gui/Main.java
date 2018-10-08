@@ -30,7 +30,7 @@ public class Main extends Application {
         MenuItem newMenuItem = new MenuItem("New");
         MenuItem saveMenuItem = new MenuItem("Save");
         MenuItem exitMenuItem = new MenuItem("Exit");
-        exitMenuItem.setOnAction(actionEvent -> Platform.exit());
+        exitMenuItem.setOnAction(event -> Platform.exit());
 
         fileMenu.getItems().addAll(newMenuItem, saveMenuItem,
                 new SeparatorMenuItem(), exitMenuItem);
