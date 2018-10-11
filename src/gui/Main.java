@@ -18,7 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
-        Scene scene = new Scene(root, 600, 450, Color.WHITE);
+        Scene scene = new Scene(root, 800, 550, Color.WHITE);
 
         MenuBar menuBar = new MenuBar();
         menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
@@ -67,7 +67,7 @@ public class Main extends Application {
 
         //direction area
         BorderPane dirPane = new BorderPane();
-        dirPane.setPadding(new Insets(65,60,110,0));
+        dirPane.setPadding(new Insets(45,60,230,0));
         root.setRight(dirPane);
 
         //north button
