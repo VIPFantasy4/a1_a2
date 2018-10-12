@@ -18,13 +18,13 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Created by Administrator on 2018/10/8.
  */
 public class MainApplication extends Application {
     private File file;
-    private Alert alert;
     private WorldMap worldMap;
 
     public static void main(String[] args) {
@@ -134,18 +134,27 @@ public class MainApplication extends Application {
                     worldMap = new WorldMap(file.getPath());
                     setDisable(false, disPane, dirPane);
                 } catch (WorldMapFormatException | WorldMapInconsistentException | FileNotFoundException e) {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setHeaderText(null);
-                    alert.setContentText(e.getMessage());
-                    alert.showAndWait();
-                    alert = null;
+                    alert(e.getMessage());
                 } finally {
                     file = null;
                 }
             }
         });
-        // TODO: action of save
         MenuItem saveMenuItem = new MenuItem("Save World Map");
+        saveMenuItem.setOnAction(event -> {
+            if (worldMap != null) {
+                file = new FileChooser().showSaveDialog(primaryStage);
+                if (file != null) {
+                    try {
+                        worldMap.saveMap(file.getPath());
+                    } catch (IOException e) {
+                        alert(e.getMessage());
+                    }
+                }
+            } else {
+                alert("no file");
+            }
+        });
         MenuItem exitMenuItem = new MenuItem("Exit");
         exitMenuItem.setOnAction(event -> Platform.exit());
         fileMenu.getItems().addAll(loadMenuItem, saveMenuItem, new SeparatorMenuItem(), exitMenuItem);
@@ -164,5 +173,12 @@ public class MainApplication extends Application {
         for (Node node : nodes) {
             node.setDisable(flag);
         }
+    }
+
+    private void alert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
 }
