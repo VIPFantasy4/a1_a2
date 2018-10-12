@@ -26,10 +26,15 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         BorderPane root = new BorderPane();
 
+        /* display area */
+        BorderPane disPane = new BorderPane();
+        disPane.setStyle("-fx-border-color: red");  // highlight for debugging
+        root.setCenter(disPane);
+
         /* direction area */
         BorderPane dirPane = new BorderPane();
         dirPane.setPadding(new Insets(45, 60, 230, 0));
-        dirPane.setStyle("-fx-border-color: red");  // highlight for debugging
+        dirPane.setStyle("-fx-border-color: yellow");  // highlight for debugging
         root.setRight(dirPane);
 
         /* north button */
@@ -113,7 +118,7 @@ public class MainApplication extends Application {
         Menu fileMenu = new Menu("File");
         // TODO: action of load and of save
         MenuItem loadMenuItem = new MenuItem("Load Game World");
-        loadMenuItem.setOnAction(event -> setDisable(false, dirPane));
+        loadMenuItem.setOnAction(event -> setDisable(false, disPane, dirPane));
         MenuItem saveMenuItem = new MenuItem("Save World Map");
         MenuItem exitMenuItem = new MenuItem("Exit");
         exitMenuItem.setOnAction(event -> Platform.exit());
@@ -121,7 +126,7 @@ public class MainApplication extends Application {
         menuBar.getMenus().addAll(fileMenu);
         root.setTop(menuBar);
 
-        setDisable(true, dirPane);
+        setDisable(true, disPane, dirPane);
 
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
