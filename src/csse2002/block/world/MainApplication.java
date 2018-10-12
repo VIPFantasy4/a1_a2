@@ -132,15 +132,14 @@ public class MainApplication extends Application {
             if (file != null) {
                 try {
                     worldMap = new WorldMap(file.getPath());
+                    setDisable(false, disPane, dirPane);
                 } catch (WorldMapFormatException | WorldMapInconsistentException | FileNotFoundException e) {
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setHeaderText(null);
                     alert.setContentText(e.getMessage());
                     alert.showAndWait();
                     alert = null;
-                }
-                if (worldMap != null) {
-                    setDisable(false, disPane, dirPane);
+                } finally {
                     file = null;
                 }
             }
