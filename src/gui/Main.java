@@ -67,24 +67,24 @@ public class Main extends Application {
 
         //direction area
         BorderPane dirPane = new BorderPane();
-        dirPane.setPadding(new Insets(45,60,230,0));
+        dirPane.setPadding(new Insets(45, 60, 230, 0));
         root.setRight(dirPane);
 
         //north button
         Button northButton = new Button("north");
-        northButton.setPrefSize(70,40);
+        northButton.setPrefSize(70, 40);
         northButton.setStyle("-fx-background-color: #336699");
         //east button
         Button eastButton = new Button("east");
-        eastButton.setPrefSize(70,40);
+        eastButton.setPrefSize(70, 40);
         eastButton.setStyle("-fx-background-color: #336699");
         //south button
         Button southButton = new Button("south");
-        southButton.setPrefSize(70,40);
+        southButton.setPrefSize(70, 40);
         southButton.setStyle("-fx-background-color: #336699");
         //west button
         Button westButton = new Button("west");
-        westButton.setPrefSize(70,40);
+        westButton.setPrefSize(70, 40);
         westButton.setStyle("-fx-background-color: #336699");
         //dig button
         Button digButton = new Button("Dig");
@@ -93,7 +93,7 @@ public class Main extends Application {
         Button dropButton = new Button("Drop");
         dropButton.setStyle("-fx-background-color: #336699");
         //move choice
-        ObservableList cursors = FXCollections.observableArrayList("Move Builder","Move Block");
+        ObservableList cursors = FXCollections.observableArrayList("Move Builder", "Move Block");
         ChoiceBox choiceBox = new ChoiceBox();
         choiceBox.setItems(cursors);
         choiceBox.getSelectionModel().select(0);
@@ -106,31 +106,31 @@ public class Main extends Application {
         //north and south
         VBox cenBox = new VBox();
         cenBox.setSpacing(40);
-        cenBox.getChildren().addAll(northButton,southButton);
+        cenBox.getChildren().addAll(northButton, southButton);
         dirPane.setCenter(cenBox);
         //west
         VBox leftBox = new VBox();
-        leftBox.setPadding(new Insets(40,0,0,0));
+        leftBox.setPadding(new Insets(40, 0, 0, 0));
         leftBox.getChildren().add(westButton);
         dirPane.setLeft(leftBox);
         //east
         VBox rightBox = new VBox();
         rightBox.getChildren().add(eastButton);
-        rightBox.setPadding(new Insets(40,0,0,0));
+        rightBox.setPadding(new Insets(40, 0, 0, 0));
         dirPane.setRight(rightBox);
 
         //choiceBox,digButton,dropButton and dropIndexField
         VBox otherBox = new VBox();
         otherBox.setSpacing(20);
         HBox choiceHBox = new HBox();
-        choiceHBox.setPadding(new Insets(0,0,0,50));
+        choiceHBox.setPadding(new Insets(0, 0, 0, 50));
         choiceHBox.getChildren().add(choiceBox);
         HBox digHBox = new HBox();
         digHBox.getChildren().add(digButton);
         HBox dropHBox = new HBox();
         dropHBox.setSpacing(5);
-        dropHBox.getChildren().addAll(dropButton,dropIndexField);
-        otherBox.getChildren().addAll(choiceHBox,digHBox,dropHBox);
+        dropHBox.getChildren().addAll(dropButton, dropIndexField);
+        otherBox.getChildren().addAll(choiceHBox, digHBox, dropHBox);
         dirPane.setBottom(otherBox);
 
         primaryStage.setScene(scene);
