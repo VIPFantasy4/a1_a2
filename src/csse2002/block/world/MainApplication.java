@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -25,21 +26,10 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         BorderPane root = new BorderPane();
 
-        /* File Menu */
-        MenuBar menuBar = new MenuBar();
-        Menu fileMenu = new Menu("File");
-        // TODO: action of load and of save
-        MenuItem loadMenuItem = new MenuItem("Load Game World");
-        MenuItem saveMenuItem = new MenuItem("Save World Map");
-        MenuItem exitMenuItem = new MenuItem("Exit");
-        exitMenuItem.setOnAction(event -> Platform.exit());
-        fileMenu.getItems().addAll(loadMenuItem, saveMenuItem, new SeparatorMenuItem(), exitMenuItem);
-        menuBar.getMenus().addAll(fileMenu);
-        root.setTop(menuBar);
-
         /* direction area */
         BorderPane dirPane = new BorderPane();
         dirPane.setPadding(new Insets(45, 60, 230, 0));
+        dirPane.setStyle("-fx-border-color: red");  // highlight for debugging
         root.setRight(dirPane);
 
         /* north button */
@@ -118,9 +108,30 @@ public class MainApplication extends Application {
         otherBox.getChildren().addAll(choiceHBox, digHBox, dropHBox);
         dirPane.setBottom(otherBox);
 
+        /* File Menu */
+        MenuBar menuBar = new MenuBar();
+        Menu fileMenu = new Menu("File");
+        // TODO: action of load and of save
+        MenuItem loadMenuItem = new MenuItem("Load Game World");
+        loadMenuItem.setOnAction(event -> setDisable(false, dirPane));
+        MenuItem saveMenuItem = new MenuItem("Save World Map");
+        MenuItem exitMenuItem = new MenuItem("Exit");
+        exitMenuItem.setOnAction(event -> Platform.exit());
+        fileMenu.getItems().addAll(loadMenuItem, saveMenuItem, new SeparatorMenuItem(), exitMenuItem);
+        menuBar.getMenus().addAll(fileMenu);
+        root.setTop(menuBar);
+
+        setDisable(true, dirPane);
+
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Block World");
         primaryStage.show();
+    }
+
+    private void setDisable(boolean flag, Node... nodes) {
+        for (Node node : nodes) {
+            node.setDisable(flag);
+        }
     }
 }
