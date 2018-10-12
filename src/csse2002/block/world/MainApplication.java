@@ -105,7 +105,7 @@ public class MainApplication extends Application {
         otherBox.getChildren().addAll(choiceHBox, digHBox, dropHBox);
         dirPane.setBottom(otherBox);
 
-        Scene scene = new Scene(root,800,550);
+        Scene scene = new Scene(root, 800, 550);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Block World");
         primaryStage.show();
