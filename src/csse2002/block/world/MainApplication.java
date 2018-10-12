@@ -4,13 +4,13 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -37,61 +37,74 @@ public class MainApplication extends Application {
         menuBar.getMenus().addAll(fileMenu);
         root.setTop(menuBar);
 
-        //direction area
+        /* direction area */
         BorderPane dirPane = new BorderPane();
         dirPane.setPadding(new Insets(45, 60, 230, 0));
         root.setRight(dirPane);
 
-        //north button
+        /* north button */
         Button northButton = new Button("north");
         northButton.setPrefSize(70, 40);
         northButton.setStyle("-fx-base: #336699");
-        //east button
+        northButton.setTextFill(Color.WHITE);
+
+        /* east button */
         Button eastButton = new Button("east");
         eastButton.setPrefSize(70, 40);
         eastButton.setStyle("-fx-base: #336699");
-        //south button
+        eastButton.setTextFill(Color.WHITE);
+
+        /* south button */
         Button southButton = new Button("south");
         southButton.setPrefSize(70, 40);
         southButton.setStyle("-fx-base: #336699");
-        //west button
+        southButton.setTextFill(Color.WHITE);
+
+        /* west button */
         Button westButton = new Button("west");
         westButton.setPrefSize(70, 40);
         westButton.setStyle("-fx-base: #336699");
-        //dig button
+        westButton.setTextFill(Color.WHITE);
+
+        /* dig button */
         Button digButton = new Button("Dig");
         digButton.setStyle("-fx-base: #336699");
-        //drop button
+        digButton.setTextFill(Color.WHITE);
+
+        /* drop button */
         Button dropButton = new Button("Drop");
         dropButton.setStyle("-fx-base: #336699");
-        //move choice
-        ObservableList cursors = FXCollections.observableArrayList("Move Builder", "Move Block");
-        ChoiceBox choiceBox = new ChoiceBox();
+        dropButton.setTextFill(Color.WHITE);
+
+        /* move choice */
+        ObservableList<String> cursors = FXCollections.observableArrayList("Move Builder", "Move Block");
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.setItems(cursors);
         choiceBox.getSelectionModel().select(0);
         choiceBox.setPrefWidth(110);
-        //drop Index textField
+
+        /* drop index TextField */
         TextField dropIndexField = new TextField();
         dropIndexField.setPrefWidth(140);
         dropIndexField.setPromptText("Drop Index");
 
-        //north and south
+        /* locate north and locate south */
         VBox cenBox = new VBox();
         cenBox.setSpacing(40);
         cenBox.getChildren().addAll(northButton, southButton);
         dirPane.setCenter(cenBox);
-        //west
+        /* locate west */
         VBox leftBox = new VBox();
         leftBox.setPadding(new Insets(40, 0, 0, 0));
         leftBox.getChildren().add(westButton);
         dirPane.setLeft(leftBox);
-        //east
+        /* locate east */
         VBox rightBox = new VBox();
         rightBox.getChildren().add(eastButton);
         rightBox.setPadding(new Insets(40, 0, 0, 0));
         dirPane.setRight(rightBox);
 
-        //choiceBox,digButton,dropButton and dropIndexField
+        /* fix choiceBox, digButton, dropButton and dropIndexField */
         VBox otherBox = new VBox();
         otherBox.setSpacing(20);
         HBox choiceHBox = new HBox();
