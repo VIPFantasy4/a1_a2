@@ -28,6 +28,8 @@ public class MainApplication extends Application {
 
         /* File Menu */
         MenuBar menuBar = new MenuBar();
+        menuBar.setStyle("-fx-border-color: blue");
+        menuBar.setStyle("-fx-border-style: hidden hidden solid hidden");
         Menu fileMenu = new Menu("File");
         // TODO: action of load and of save
         MenuItem loadMenuItem = new MenuItem("Load Game World");
