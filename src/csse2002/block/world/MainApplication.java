@@ -12,12 +12,21 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * Created by Administrator on 2018/10/8.
  */
 public class MainApplication extends Application {
+    private File file;
+    private Alert alert;
+    private WorldMap worldMap;
+
     public static void main(String[] args) {
         launch(MainApplication.class, args);
     }
@@ -28,6 +37,7 @@ public class MainApplication extends Application {
 
         /* display area */
         BorderPane disPane = new BorderPane();
+        // TODO: disPane.setPadding(); -- top: 15, left: 15
         disPane.setStyle("-fx-border-color: red");  // highlight for debugging
         root.setCenter(disPane);
 
@@ -116,9 +126,26 @@ public class MainApplication extends Application {
         /* File Menu */
         MenuBar menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
-        // TODO: action of load and of save
         MenuItem loadMenuItem = new MenuItem("Load Game World");
-        loadMenuItem.setOnAction(event -> setDisable(false, disPane, dirPane));
+        loadMenuItem.setOnAction(event -> {
+            file = new FileChooser().showOpenDialog(primaryStage);
+            if (file != null) {
+                try {
+                    worldMap = new WorldMap(file.getPath());
+                } catch (WorldMapFormatException | WorldMapInconsistentException | FileNotFoundException e) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText(null);
+                    alert.setContentText(e.getMessage());
+                    alert.showAndWait();
+                    alert = null;
+                }
+                if (worldMap != null) {
+                    setDisable(false, disPane, dirPane);
+                    file = null;
+                }
+            }
+        });
+        // TODO: action of save
         MenuItem saveMenuItem = new MenuItem("Save World Map");
         MenuItem exitMenuItem = new MenuItem("Exit");
         exitMenuItem.setOnAction(event -> Platform.exit());

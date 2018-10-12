@@ -11,9 +11,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class Main extends Application {
+    private File file;
+    Alert alert;
 
     @Override
     public void start(Stage primaryStage) {
@@ -27,7 +32,20 @@ public class Main extends Application {
         // File menu - new, save, exit
         Menu fileMenu = new Menu("File");
         MenuItem newMenuItem = new MenuItem("New");
+        newMenuItem.setOnAction(event -> file = new FileChooser().showOpenDialog(primaryStage));
         MenuItem saveMenuItem = new MenuItem("Save");
+        saveMenuItem.setOnAction(event -> {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            if (file != null) {
+                alert.setContentText(file.getName());
+            } else {
+                alert.setContentText("no file");
+            }
+            alert.showAndWait();
+            System.out.println("fuck");
+            alert = null;
+        });
         MenuItem exitMenuItem = new MenuItem("Exit");
         exitMenuItem.setOnAction(event -> Platform.exit());
 
