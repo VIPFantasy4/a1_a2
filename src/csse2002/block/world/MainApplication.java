@@ -24,6 +24,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         BorderPane root = new BorderPane();
+        root.setStyle("-fx-border-color: black");
 
         /* File Menu */
         MenuBar menuBar = new MenuBar();
