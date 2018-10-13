@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -63,12 +64,12 @@ public class MainApplication extends Application {
         northButton.setTextFill(Color.WHITE);
         northButton.setOnAction(event -> {
             Action northAction = null;
-            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())){
-                northAction = new Action(Action.MOVE_BUILDER,"north");
-            }else {
-                northAction = new Action(Action.MOVE_BLOCK,"north");
+            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
+                northAction = new Action(Action.MOVE_BUILDER, "north");
+            } else {
+                northAction = new Action(Action.MOVE_BLOCK, "north");
             }
-            Action.processAction(northAction,worldMap);
+            Action.processAction(northAction, worldMap);
             //TODO:卧槽，里面catch异常了，在这怎么输出错误信息??????(下同)
         });
 
@@ -79,13 +80,14 @@ public class MainApplication extends Application {
         eastButton.setTextFill(Color.WHITE);
         eastButton.setOnAction(event -> {
             Action eastAction = null;
-            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())){
-                eastAction = new Action(Action.MOVE_BUILDER,"east");
-            }else {
-                eastAction = new Action(Action.MOVE_BLOCK,"east");
+            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
+                eastAction = new Action(Action.MOVE_BUILDER, "east");
+            } else {
+                eastAction = new Action(Action.MOVE_BLOCK, "east");
             }
-            Action.processAction(eastAction,worldMap);
+            Action.processAction(eastAction, worldMap);
         });
+
         /* south button */
         Button southButton = new Button("south");
         southButton.setPrefSize(70, 40);
@@ -93,13 +95,14 @@ public class MainApplication extends Application {
         southButton.setTextFill(Color.WHITE);
         southButton.setOnAction(event -> {
             Action southAction = null;
-            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())){
-                southAction = new Action(Action.MOVE_BUILDER,"south");
-            }else {
-                southAction = new Action(Action.MOVE_BLOCK,"south");
+            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
+                southAction = new Action(Action.MOVE_BUILDER, "south");
+            } else {
+                southAction = new Action(Action.MOVE_BLOCK, "south");
             }
-            Action.processAction(southAction,worldMap);
+            Action.processAction(southAction, worldMap);
         });
+
         /* west button */
         Button westButton = new Button("west");
         westButton.setPrefSize(70, 40);
@@ -107,20 +110,21 @@ public class MainApplication extends Application {
         westButton.setTextFill(Color.WHITE);
         westButton.setOnAction(event -> {
             Action westAction = null;
-            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())){
-                westAction = new Action(Action.MOVE_BUILDER,"west");
-            }else {
-                westAction = new Action(Action.MOVE_BLOCK,"west");
+            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
+                westAction = new Action(Action.MOVE_BUILDER, "west");
+            } else {
+                westAction = new Action(Action.MOVE_BLOCK, "west");
             }
-            Action.processAction(westAction,worldMap);
+            Action.processAction(westAction, worldMap);
         });
+
         /* dig button */
         Button digButton = new Button("Dig");
         digButton.setStyle("-fx-base: #336699");
         digButton.setTextFill(Color.WHITE);
         digButton.setOnAction(event -> {
-            Action digAction = new Action(Action.DIG,"");
-            Action.processAction(digAction,worldMap);
+            Action digAction = new Action(Action.DIG, "");
+            Action.processAction(digAction, worldMap);
         });
 
         /* drop index TextField */
@@ -132,9 +136,10 @@ public class MainApplication extends Application {
         dropButton.setStyle("-fx-base: #336699");
         dropButton.setTextFill(Color.WHITE);
         dropButton.setOnAction(event -> {
-            Action dropAction = new Action(Action.DROP,dropIndexField.getText());
-            Action.processAction(dropAction,worldMap);
+            Action dropAction = new Action(Action.DROP, dropIndexField.getText());
+            Action.processAction(dropAction, worldMap);
         });
+
         /* locate north and locate south */
         VBox cenBox = new VBox();
         cenBox.setSpacing(40);
@@ -165,17 +170,15 @@ public class MainApplication extends Application {
         otherBox.getChildren().addAll(choiceHBox, digHBox, dropHBox);
         dirPane.setBottom(otherBox);
 
-        /*Inventory*/
+        /* inventory */
         VBox inventoryVBox = new VBox();
-        inventoryVBox.setPadding(new Insets(0,0,50,30));
+        inventoryVBox.setPadding(new Insets(0, 0, 50, 30));
         Text inventoryText = new Text("Inventory:");
-        inventoryText.setFont(Font.font(15));
+        inventoryText.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         Text inventory = new Text("[]");
-        inventory.setFont(Font.font(15));
-        inventoryVBox.getChildren().addAll(inventoryText,inventory);
+        inventory.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        inventoryVBox.getChildren().addAll(inventoryText, inventory);
         root.setBottom(inventoryVBox);
-
-
 
         /* File Menu */
         MenuBar menuBar = new MenuBar();
