@@ -22,7 +22,10 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/10/8.
@@ -30,6 +33,7 @@ import java.util.List;
 public class MainApplication extends Application {
     private File file;
     private WorldMap worldMap;
+    Map<Tile,Position> tilePosition = new HashMap<>();
 
     public static void main(String[] args) {
         launch(MainApplication.class, args);
@@ -208,6 +212,7 @@ public class MainApplication extends Application {
                     setDisable(false, disPane, dirPane);
                     inventoryText.setText("Builder Inventory:");
                     inventory.setText(builderInventory(worldMap));
+                    displayMap(worldMap,disPane);
                     alertSuccessMsg("map is successfully loaded");
                 } catch (WorldMapFormatException | WorldMapInconsistentException | FileNotFoundException e) {
                     alert(e.getMessage());
@@ -278,5 +283,67 @@ public class MainApplication extends Application {
         }
         currentIventory = "[" + currentIventory + "]";
         return currentIventory;
+    }
+
+    private void displayMap(WorldMap worldMap,BorderPane disPane){
+        int startX = 4 * 50 + 30 - worldMap.getStartPosition().getX() * 50;
+        int startY = 4 * 50 + 30 - worldMap.getStartPosition().getY() * 50;
+        List<Tile> tiles = worldMap.getTiles();
+        tilePosition.put(tiles.get(0),new Position(startX,startY));
+        for (int i = 0; i < tiles.size(); i++){
+            Tile tile = tiles.get(i);
+            Position position = tilePosition.get(tile);
+            Map<String, Tile> exits = tile.getExits();
+            if (exits != null && exits.size() > 0){
+                Iterator<Map.Entry<String,Tile>> iterator = exits.entrySet().iterator();
+                while (iterator.hasNext()){
+                    Map.Entry<String,Tile> exit = iterator.next();
+                    switch (exit.getKey()){
+                        case "north":
+                            tilePosition.put(exit.getValue(),new Position(position.getX(),position.getY() - 50 ));
+                            break;
+                        case "east":
+                            tilePosition.put(exit.getValue(),new Position(position.getX() + 50,position.getY()));
+                            break;
+                        case "south":
+                            tilePosition.put(exit.getValue(),new Position(position.getX(),position.getY() + 50 ));
+                            break;
+                        case "west":
+                            tilePosition.put(exit.getValue(),new Position(position.getX() - 50,position.getY()));
+                            break;
+                        default:
+                    }
+                }
+            }
+        }
+        Iterator<Map.Entry<Tile,Position>> iterator = tilePosition.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<Tile,Position> entry = iterator.next();
+            Tile tile = entry.getKey();
+            Position position = entry.getValue();
+            Rectangle rectangle = new Rectangle(position.getX(),position.getY(),50,50);
+            try {
+                Block block = tile.getTopBlock();
+                switch (block.getBlockType()){
+                    case "grass":
+                        rectangle.setFill(Color.GREEN);
+                        break;
+                    case "soil":
+                        rectangle.setFill(Color.BLACK);
+                        break;
+                    case "stone":
+                        rectangle.setFill(Color.GRAY);
+                        break;
+                    case "wood":
+                        rectangle.setFill(Color.BROWN);
+                        break;
+                    default:
+                }
+            } catch (TooLowException e) {
+                e.printStackTrace();
+            }
+            //TODO:怎么在矩形加文字和三角，block个数为tile.getBlocks().size(),出口根据 tile.getExits()画，builder初始化其实坐标块
+            disPane.getChildren().add(rectangle);
+        }
     }
 }
