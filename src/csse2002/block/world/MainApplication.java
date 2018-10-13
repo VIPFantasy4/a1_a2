@@ -13,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -37,49 +39,15 @@ public class MainApplication extends Application {
 
         /* display area */
         BorderPane disPane = new BorderPane();
-        // TODO: disPane.setPadding(); -- top: 15, left: 15
+        // TODO: disPane.setPadding(); -- top: 15, left: 15(妈的我设置setPadding不知道为啥一直不生效，我晚上再看看，现在在路上)
         disPane.setStyle("-fx-border-color: red");  // highlight for debugging
         root.setCenter(disPane);
 
         /* direction area */
         BorderPane dirPane = new BorderPane();
-        dirPane.setPadding(new Insets(45, 60, 230, 0));
+        dirPane.setPadding(new Insets(45, 60, 180, 0));
         dirPane.setStyle("-fx-border-color: yellow");  // highlight for debugging
         root.setRight(dirPane);
-
-        /* north button */
-        Button northButton = new Button("north");
-        northButton.setPrefSize(70, 40);
-        northButton.setStyle("-fx-base: #336699");
-        northButton.setTextFill(Color.WHITE);
-
-        /* east button */
-        Button eastButton = new Button("east");
-        eastButton.setPrefSize(70, 40);
-        eastButton.setStyle("-fx-base: #336699");
-        eastButton.setTextFill(Color.WHITE);
-
-        /* south button */
-        Button southButton = new Button("south");
-        southButton.setPrefSize(70, 40);
-        southButton.setStyle("-fx-base: #336699");
-        southButton.setTextFill(Color.WHITE);
-
-        /* west button */
-        Button westButton = new Button("west");
-        westButton.setPrefSize(70, 40);
-        westButton.setStyle("-fx-base: #336699");
-        westButton.setTextFill(Color.WHITE);
-
-        /* dig button */
-        Button digButton = new Button("Dig");
-        digButton.setStyle("-fx-base: #336699");
-        digButton.setTextFill(Color.WHITE);
-
-        /* drop button */
-        Button dropButton = new Button("Drop");
-        dropButton.setStyle("-fx-base: #336699");
-        dropButton.setTextFill(Color.WHITE);
 
         /* move choice */
         ObservableList<String> cursors = FXCollections.observableArrayList("Move Builder", "Move Block");
@@ -88,11 +56,85 @@ public class MainApplication extends Application {
         choiceBox.getSelectionModel().select(0);
         choiceBox.setPrefWidth(110);
 
+        /* north button */
+        Button northButton = new Button("north");
+        northButton.setPrefSize(70, 40);
+        northButton.setStyle("-fx-base: #336699");
+        northButton.setTextFill(Color.WHITE);
+        northButton.setOnAction(event -> {
+            Action northAction = null;
+            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())){
+                northAction = new Action(Action.MOVE_BUILDER,"north");
+            }else {
+                northAction = new Action(Action.MOVE_BLOCK,"north");
+            }
+            Action.processAction(northAction,worldMap);
+            //TODO:卧槽，里面catch异常了，在这怎么输出错误信息??????(下同)
+        });
+
+        /* east button */
+        Button eastButton = new Button("east");
+        eastButton.setPrefSize(70, 40);
+        eastButton.setStyle("-fx-base: #336699");
+        eastButton.setTextFill(Color.WHITE);
+        eastButton.setOnAction(event -> {
+            Action eastAction = null;
+            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())){
+                eastAction = new Action(Action.MOVE_BUILDER,"east");
+            }else {
+                eastAction = new Action(Action.MOVE_BLOCK,"east");
+            }
+            Action.processAction(eastAction,worldMap);
+        });
+        /* south button */
+        Button southButton = new Button("south");
+        southButton.setPrefSize(70, 40);
+        southButton.setStyle("-fx-base: #336699");
+        southButton.setTextFill(Color.WHITE);
+        southButton.setOnAction(event -> {
+            Action southAction = null;
+            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())){
+                southAction = new Action(Action.MOVE_BUILDER,"south");
+            }else {
+                southAction = new Action(Action.MOVE_BLOCK,"south");
+            }
+            Action.processAction(southAction,worldMap);
+        });
+        /* west button */
+        Button westButton = new Button("west");
+        westButton.setPrefSize(70, 40);
+        westButton.setStyle("-fx-base: #336699");
+        westButton.setTextFill(Color.WHITE);
+        westButton.setOnAction(event -> {
+            Action westAction = null;
+            if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())){
+                westAction = new Action(Action.MOVE_BUILDER,"west");
+            }else {
+                westAction = new Action(Action.MOVE_BLOCK,"west");
+            }
+            Action.processAction(westAction,worldMap);
+        });
+        /* dig button */
+        Button digButton = new Button("Dig");
+        digButton.setStyle("-fx-base: #336699");
+        digButton.setTextFill(Color.WHITE);
+        digButton.setOnAction(event -> {
+            Action digAction = new Action(Action.DIG,"");
+            Action.processAction(digAction,worldMap);
+        });
+
         /* drop index TextField */
         TextField dropIndexField = new TextField();
         dropIndexField.setPrefWidth(140);
         dropIndexField.setPromptText("Drop Index");
-
+        /* drop button */
+        Button dropButton = new Button("Drop");
+        dropButton.setStyle("-fx-base: #336699");
+        dropButton.setTextFill(Color.WHITE);
+        dropButton.setOnAction(event -> {
+            Action dropAction = new Action(Action.DROP,dropIndexField.getText());
+            Action.processAction(dropAction,worldMap);
+        });
         /* locate north and locate south */
         VBox cenBox = new VBox();
         cenBox.setSpacing(40);
@@ -123,6 +165,18 @@ public class MainApplication extends Application {
         otherBox.getChildren().addAll(choiceHBox, digHBox, dropHBox);
         dirPane.setBottom(otherBox);
 
+        /*Inventory*/
+        VBox inventoryVBox = new VBox();
+        inventoryVBox.setPadding(new Insets(0,0,50,30));
+        Text inventoryText = new Text("Inventory:");
+        inventoryText.setFont(Font.font(15));
+        Text inventory = new Text("[]");
+        inventory.setFont(Font.font(15));
+        inventoryVBox.getChildren().addAll(inventoryText,inventory);
+        root.setBottom(inventoryVBox);
+
+
+
         /* File Menu */
         MenuBar menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
@@ -133,6 +187,7 @@ public class MainApplication extends Application {
                 try {
                     worldMap = new WorldMap(file.getPath());
                     setDisable(false, disPane, dirPane);
+                    inventoryText.setText("Builder Inventory:");
                 } catch (WorldMapFormatException | WorldMapInconsistentException | FileNotFoundException e) {
                     alert(e.getMessage());
                 } finally {
