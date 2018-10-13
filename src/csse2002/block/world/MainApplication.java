@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Administrator on 2018/10/8.
@@ -46,6 +47,16 @@ public class MainApplication extends Application {
         border.setStroke(Color.BLACK);
         disPane.getChildren().addAll(border);
         root.setCenter(disPane);
+
+        /* inventory */
+        VBox inventoryVBox = new VBox();
+        inventoryVBox.setPadding(new Insets(0, 0, 50, 30));
+        Text inventoryText = new Text("Inventory:");
+        inventoryText.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        Text inventory = new Text("[]");
+        inventory.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        inventoryVBox.getChildren().addAll(inventoryText, inventory);
+        root.setBottom(inventoryVBox);
 
         /* direction area */
         BorderPane dirPane = new BorderPane();
@@ -73,6 +84,7 @@ public class MainApplication extends Application {
                 northAction = new Action(Action.MOVE_BLOCK, "north");
             }
             Action.processAction(northAction, worldMap);
+            inventory.setText(builderInventory(worldMap));
             //TODO:卧槽，里面catch异常了，在这怎么输出错误信息??????(下同)
         });
 
@@ -89,6 +101,7 @@ public class MainApplication extends Application {
                 eastAction = new Action(Action.MOVE_BLOCK, "east");
             }
             Action.processAction(eastAction, worldMap);
+            inventory.setText(builderInventory(worldMap));
         });
 
         /* south button */
@@ -104,6 +117,7 @@ public class MainApplication extends Application {
                 southAction = new Action(Action.MOVE_BLOCK, "south");
             }
             Action.processAction(southAction, worldMap);
+            inventory.setText(builderInventory(worldMap));
         });
 
         /* west button */
@@ -119,6 +133,7 @@ public class MainApplication extends Application {
                 westAction = new Action(Action.MOVE_BLOCK, "west");
             }
             Action.processAction(westAction, worldMap);
+            inventory.setText(builderInventory(worldMap));
         });
 
         /* dig button */
@@ -128,6 +143,7 @@ public class MainApplication extends Application {
         digButton.setOnAction(event -> {
             Action digAction = new Action(Action.DIG, "");
             Action.processAction(digAction, worldMap);
+            inventory.setText(builderInventory(worldMap));
         });
 
         /* drop index TextField */
@@ -141,6 +157,7 @@ public class MainApplication extends Application {
         dropButton.setOnAction(event -> {
             Action dropAction = new Action(Action.DROP, dropIndexField.getText());
             Action.processAction(dropAction, worldMap);
+            inventory.setText(builderInventory(worldMap));
         });
 
         /* locate north and locate south */
@@ -177,15 +194,7 @@ public class MainApplication extends Application {
         otherBox.getChildren().addAll(choiceHBox, digHBox, dropHBox);
         dirPane.setBottom(otherBox);
 
-        /* inventory */
-        VBox inventoryVBox = new VBox();
-        inventoryVBox.setPadding(new Insets(0, 0, 50, 30));
-        Text inventoryText = new Text("Inventory:");
-        inventoryText.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-        Text inventory = new Text("[]");
-        inventory.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-        inventoryVBox.getChildren().addAll(inventoryText, inventory);
-        root.setBottom(inventoryVBox);
+
 
         /* File Menu */
         MenuBar menuBar = new MenuBar();
@@ -198,6 +207,8 @@ public class MainApplication extends Application {
                     worldMap = new WorldMap(file.getPath());
                     setDisable(false, disPane, dirPane);
                     inventoryText.setText("Builder Inventory:");
+                    inventory.setText(builderInventory(worldMap));
+                    alertSuccessMsg("map is successfully loaded");
                 } catch (WorldMapFormatException | WorldMapInconsistentException | FileNotFoundException e) {
                     alert(e.getMessage());
                 } finally {
@@ -212,6 +223,7 @@ public class MainApplication extends Application {
                 if (file != null) {
                     try {
                         worldMap.saveMap(file.getPath());
+                        alertSuccessMsg("map is successfully saved");
                     } catch (IOException e) {
                         alert(e.getMessage());
                     }
@@ -245,5 +257,26 @@ public class MainApplication extends Application {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+    private void alertSuccessMsg(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    private String builderInventory(WorldMap worldMap){
+        List<Block> inventorys = worldMap.getBuilder().getInventory();
+        String currentIventory = "";
+        for (int i = 0; i < inventorys.size(); i++){
+            Block block = inventorys.get(i);
+            if (i == inventorys.size() - 1){
+                currentIventory = currentIventory + block.getBlockType();
+                break;
+            }
+            currentIventory = currentIventory + block.getBlockType() + ",";
+        }
+        currentIventory = "[" + currentIventory + "]";
+        return currentIventory;
     }
 }
