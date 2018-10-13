@@ -63,7 +63,7 @@ public class MainApplication extends Application {
         northButton.setStyle("-fx-base: #336699");
         northButton.setTextFill(Color.WHITE);
         northButton.setOnAction(event -> {
-            Action northAction = null;
+            Action northAction;
             if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
                 northAction = new Action(Action.MOVE_BUILDER, "north");
             } else {
@@ -79,7 +79,7 @@ public class MainApplication extends Application {
         eastButton.setStyle("-fx-base: #336699");
         eastButton.setTextFill(Color.WHITE);
         eastButton.setOnAction(event -> {
-            Action eastAction = null;
+            Action eastAction;
             if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
                 eastAction = new Action(Action.MOVE_BUILDER, "east");
             } else {
@@ -94,7 +94,7 @@ public class MainApplication extends Application {
         southButton.setStyle("-fx-base: #336699");
         southButton.setTextFill(Color.WHITE);
         southButton.setOnAction(event -> {
-            Action southAction = null;
+            Action southAction;
             if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
                 southAction = new Action(Action.MOVE_BUILDER, "south");
             } else {
@@ -109,7 +109,7 @@ public class MainApplication extends Application {
         westButton.setStyle("-fx-base: #336699");
         westButton.setTextFill(Color.WHITE);
         westButton.setOnAction(event -> {
-            Action westAction = null;
+            Action westAction;
             if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
                 westAction = new Action(Action.MOVE_BUILDER, "west");
             } else {
