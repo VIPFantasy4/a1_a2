@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -30,6 +31,10 @@ import java.util.Map;
  * Created by Administrator on 2018/10/8.
  */
 public class MainApplication extends Application {
+    public static int STARTING_X = 230;
+    public static int STARTING_Y = 230;
+
+
     private File file;
     private WorldMap worldMap;
     private Map<Tile, Position> tilePosition = new HashMap<>();
@@ -210,9 +215,9 @@ public class MainApplication extends Application {
                     inventoryText.setText("Builder Inventory:");
                     inventory.setText(builderInventory(worldMap));
                     displayMap(worldMap, disPane);
-                    alertSuccessMsg("map is successfully loaded");
+                    alertInformation("map was successfully loaded");
                 } catch (WorldMapFormatException | WorldMapInconsistentException | FileNotFoundException e) {
-                    alert(e.getMessage());
+                    alertError(e.getMessage());
                 } finally {
                     file = null;
                 }
@@ -225,13 +230,13 @@ public class MainApplication extends Application {
                 if (file != null) {
                     try {
                         worldMap.saveMap(file.getPath());
-                        alertSuccessMsg("map is successfully saved");
+                        alertInformation("map was successfully saved");
                     } catch (IOException e) {
-                        alert(e.getMessage());
+                        alertError(e.getMessage());
                     }
                 }
             } else {
-                alert("no file");
+                alertError("no file");
             }
         });
         MenuItem exitMenuItem = new MenuItem("Exit");
@@ -254,14 +259,14 @@ public class MainApplication extends Application {
         }
     }
 
-    private void alert(String msg) {
+    private void alertError(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
     }
 
-    private void alertSuccessMsg(String msg) {
+    private void alertInformation(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         alert.setContentText(msg);
@@ -269,25 +274,34 @@ public class MainApplication extends Application {
     }
 
     private String builderInventory(WorldMap worldMap) {
-        List<Block> inventorys = worldMap.getBuilder().getInventory();
-        StringBuilder currentIventory = new StringBuilder();
-        for (int i = 0; i < inventorys.size(); i++) {
-            Block block = inventorys.get(i);
-            if (i == inventorys.size() - 1) {
-                currentIventory.append(block.getBlockType());
+        List<Block> inventory = worldMap.getBuilder().getInventory();
+        StringBuilder currentInventory = new StringBuilder();
+        for (int i = 0; i < inventory.size(); i++) {
+            Block block = inventory.get(i);
+            if (i == inventory.size() - 1) {
+                currentInventory.append(block.getBlockType());
                 break;
             }
-            currentIventory.append(block.getBlockType()).append(",");
+            currentInventory.append(block.getBlockType()).append(",");
         }
-        currentIventory = new StringBuilder("[" + currentIventory + "]");
-        return currentIventory.toString();
+        currentInventory = new StringBuilder("[" + currentInventory + "]");
+        return currentInventory.toString();
     }
 
+    /**
+     * 中心点 黄点 是 worldMap的StartPosition
+     * 从那个点开始画图
+     * 这个点永远不动
+     *
+     * @param worldMap
+     * @param disPane
+     */
     private void displayMap(WorldMap worldMap, BorderPane disPane) {
-        int startX = 4 * 50 + 30 - worldMap.getStartPosition().getX() * 50;
-        int startY = 4 * 50 + 30 - worldMap.getStartPosition().getY() * 50;
+//        int STARTING_X = 230 - worldMap.getStartPosition().getX() * 50;
+//        int STARTING_Y = 230 - worldMap.getStartPosition().getY() * 50;
+        // TODO: 你看看是改这里面的XY还是改StartPosition里的XY然后去放到worldMap构造器
         List<Tile> tiles = worldMap.getTiles();
-        tilePosition.put(tiles.get(0), new Position(startX, startY));
+        tilePosition.put(tiles.get(0), new Position(STARTING_X, STARTING_Y));
         for (Tile tile : tiles) {
             Position position = tilePosition.get(tile);
             Map<String, Tile> exits = tile.getExits();
@@ -339,5 +353,8 @@ public class MainApplication extends Application {
             //TODO:怎么在矩形加文字和三角，block个数为tile.getBlocks().size(),出口根据 tile.getExits()画，builder初始化其实坐标块
             disPane.getChildren().add(rectangle);
         }
+        Circle builder = new Circle(255, 255, 5, Color.YELLOW);
+        builder.setStroke(Color.BLACK);
+        disPane.getChildren().add(builder);
     }
 }
