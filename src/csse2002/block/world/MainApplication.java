@@ -50,7 +50,7 @@ public class MainApplication extends Application {
         Rectangle border = new Rectangle(30, 30, 50 * 9, 50 * 9);
         border.setFill(Color.TRANSPARENT);
         border.setStroke(Color.BLACK);
-        disPane.getChildren().addAll(border);
+        disPane.getChildren().add(border);
         root.setCenter(disPane);
 
         /* inventory */
@@ -89,7 +89,9 @@ public class MainApplication extends Application {
                 northAction = new Action(Action.MOVE_BLOCK, "north");
             }
             if (!alertRespMsgAfterProcessedAction(northAction, "Moved")) return;
+            STARTING_Y += 50;
             inventory.setText(builderInventory(worldMap));
+            displayMap(worldMap, disPane);
         });
 
         /* east button */
@@ -105,7 +107,9 @@ public class MainApplication extends Application {
                 eastAction = new Action(Action.MOVE_BLOCK, "east");
             }
             if (!alertRespMsgAfterProcessedAction(eastAction, "Moved")) return;
+            STARTING_X -= 50;
             inventory.setText(builderInventory(worldMap));
+            displayMap(worldMap, disPane);
         });
 
         /* south button */
@@ -121,7 +125,9 @@ public class MainApplication extends Application {
                 southAction = new Action(Action.MOVE_BLOCK, "south");
             }
             if (!alertRespMsgAfterProcessedAction(southAction, "Moved")) return;
+            STARTING_Y -= 50;
             inventory.setText(builderInventory(worldMap));
+            displayMap(worldMap, disPane);
         });
 
         /* west button */
@@ -137,7 +143,9 @@ public class MainApplication extends Application {
                 westAction = new Action(Action.MOVE_BLOCK, "west");
             }
             if (!alertRespMsgAfterProcessedAction(westAction, "Moved")) return;
+            STARTING_X += 50;
             inventory.setText(builderInventory(worldMap));
+            displayMap(worldMap, disPane);
         });
 
         /* dig button */
@@ -148,6 +156,7 @@ public class MainApplication extends Application {
             Action digAction = new Action(Action.DIG, "");
             if (!alertRespMsgAfterProcessedAction(digAction, "Top")) return;
             inventory.setText(builderInventory(worldMap));
+            displayMap(worldMap, disPane);
         });
 
         /* drop index TextField */
@@ -162,6 +171,7 @@ public class MainApplication extends Application {
             Action dropAction = new Action(Action.DROP, dropIndexField.getText());
             if (!alertRespMsgAfterProcessedAction(dropAction, "Dropped")) return;
             inventory.setText(builderInventory(worldMap));
+            displayMap(worldMap, disPane);
         });
 
         /* locate north and locate south */
@@ -206,6 +216,8 @@ public class MainApplication extends Application {
             File file = new FileChooser().showOpenDialog(primaryStage);
             if (file != null) {
                 try {
+                    STARTING_X = 230;
+                    STARTING_Y = 230;
                     worldMap = new WorldMap(file.getPath());
                     setDisable(false, disPane, dirPane);
                     inventoryText.setText("Builder Inventory:");
@@ -296,19 +308,12 @@ public class MainApplication extends Application {
         return currentInventory.toString();
     }
 
-    /**
-     * 中心点 黄点 是 worldMap的StartPosition
-     * 从那个点开始画图
-     * 这个点永远不动
-     *
-     * @param worldMap
-     * @param disPane
-     */
     private void displayMap(WorldMap worldMap, BorderPane disPane) {
 //        int STARTING_X = 230 - worldMap.getStartPosition().getX() * 50;
 //        int STARTING_Y = 230 - worldMap.getStartPosition().getY() * 50;
         tilePosition.clear();
-        // TODO: 你看看是改这里面的XY还是改StartPosition里的XY然后去放到worldMap构造器
+        resetDisPane(disPane);
+        // TODO: 你看看是改这里面的XY还是改StartPosition里的XY然后去放到worldMap构造器我暂时先改这里面的XY
         List<Tile> tiles = worldMap.getTiles();
         tilePosition.put(tiles.get(0), new Position(STARTING_X, STARTING_Y));
         for (Tile tile : tiles) {
@@ -329,7 +334,7 @@ public class MainApplication extends Application {
                         case "west":
                             tilePosition.put(exit.getValue(), new Position(position.getX() - 50, position.getY()));
                             break;
-                        default:
+//                        default:
                     }
                 }
             }
@@ -357,13 +362,22 @@ public class MainApplication extends Application {
                     default:
                 }
             } catch (TooLowException e) {
-                e.printStackTrace();
+                rectangle.setFill(Color.TRANSPARENT);
             }
             //TODO:怎么在矩形加文字和三角，block个数为tile.getBlocks().size(),出口根据 tile.getExits()画，builder初始化其实坐标块
+            // TODO: 越界的不画出来 写个判断
             disPane.getChildren().add(rectangle);
         }
         Circle builder = new Circle(255, 255, 5, Color.YELLOW);
         builder.setStroke(Color.BLACK);
         disPane.getChildren().add(builder);
+    }
+
+    private void resetDisPane(BorderPane disPane) {
+        disPane.getChildren().clear();
+        Rectangle border = new Rectangle(30, 30, 50 * 9, 50 * 9);
+        border.setFill(Color.TRANSPARENT);
+        border.setStroke(Color.BLACK);
+        disPane.getChildren().add(border);
     }
 }
