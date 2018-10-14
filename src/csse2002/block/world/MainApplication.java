@@ -33,7 +33,6 @@ public class MainApplication extends Application {
     public static int STARTING_Y = 230;
 
 
-    private File file;
     private WorldMap worldMap;
     private Map<Tile, Position> tilePosition = new HashMap<>();
 
@@ -204,7 +203,7 @@ public class MainApplication extends Application {
         Menu fileMenu = new Menu("File");
         MenuItem loadMenuItem = new MenuItem("Load Game World");
         loadMenuItem.setOnAction(event -> {
-            file = new FileChooser().showOpenDialog(primaryStage);
+            File file = new FileChooser().showOpenDialog(primaryStage);
             if (file != null) {
                 try {
                     worldMap = new WorldMap(file.getPath());
@@ -215,15 +214,13 @@ public class MainApplication extends Application {
                     alertInformation("map was successfully loaded");
                 } catch (WorldMapFormatException | WorldMapInconsistentException | FileNotFoundException e) {
                     alertError(e.getMessage());
-                } finally {
-                    file = null;
                 }
             }
         });
         MenuItem saveMenuItem = new MenuItem("Save World Map");
         saveMenuItem.setOnAction(event -> {
             if (worldMap != null) {
-                file = new FileChooser().showSaveDialog(primaryStage);
+                File file = new FileChooser().showSaveDialog(primaryStage);
                 if (file != null) {
                     try {
                         worldMap.saveMap(file.getPath());
@@ -310,6 +307,7 @@ public class MainApplication extends Application {
     private void displayMap(WorldMap worldMap, BorderPane disPane) {
 //        int STARTING_X = 230 - worldMap.getStartPosition().getX() * 50;
 //        int STARTING_Y = 230 - worldMap.getStartPosition().getY() * 50;
+        tilePosition.clear();
         // TODO: 你看看是改这里面的XY还是改StartPosition里的XY然后去放到worldMap构造器
         List<Tile> tiles = worldMap.getTiles();
         tilePosition.put(tiles.get(0), new Position(STARTING_X, STARTING_Y));
