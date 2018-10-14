@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ import java.util.Map;
 public class MainApplication extends Application {
     private File file;
     private WorldMap worldMap;
-    Map<Tile, Position> tilePosition = new HashMap<>();
+    private Map<Tile, Position> tilePosition = new HashMap<>();
 
     public static void main(String[] args) {
         launch(MainApplication.class, args);
@@ -271,17 +270,17 @@ public class MainApplication extends Application {
 
     private String builderInventory(WorldMap worldMap) {
         List<Block> inventorys = worldMap.getBuilder().getInventory();
-        String currentIventory = "";
+        StringBuilder currentIventory = new StringBuilder();
         for (int i = 0; i < inventorys.size(); i++) {
             Block block = inventorys.get(i);
             if (i == inventorys.size() - 1) {
-                currentIventory = currentIventory + block.getBlockType();
+                currentIventory.append(block.getBlockType());
                 break;
             }
-            currentIventory = currentIventory + block.getBlockType() + ",";
+            currentIventory.append(block.getBlockType()).append(",");
         }
-        currentIventory = "[" + currentIventory + "]";
-        return currentIventory;
+        currentIventory = new StringBuilder("[" + currentIventory + "]");
+        return currentIventory.toString();
     }
 
     private void displayMap(WorldMap worldMap, BorderPane disPane) {
@@ -289,14 +288,11 @@ public class MainApplication extends Application {
         int startY = 4 * 50 + 30 - worldMap.getStartPosition().getY() * 50;
         List<Tile> tiles = worldMap.getTiles();
         tilePosition.put(tiles.get(0), new Position(startX, startY));
-        for (int i = 0; i < tiles.size(); i++) {
-            Tile tile = tiles.get(i);
+        for (Tile tile : tiles) {
             Position position = tilePosition.get(tile);
             Map<String, Tile> exits = tile.getExits();
             if (exits != null && exits.size() > 0) {
-                Iterator<Map.Entry<String, Tile>> iterator = exits.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry<String, Tile> exit = iterator.next();
+                for (Map.Entry<String, Tile> exit : exits.entrySet()) {
                     switch (exit.getKey()) {
                         case "north":
                             tilePosition.put(exit.getValue(), new Position(position.getX(), position.getY() - 50));
@@ -315,12 +311,11 @@ public class MainApplication extends Application {
                 }
             }
         }
-        Iterator<Map.Entry<Tile, Position>> iterator = tilePosition.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Tile, Position> entry = iterator.next();
+        for (Map.Entry<Tile, Position> entry : tilePosition.entrySet()) {
             Tile tile = entry.getKey();
             Position position = entry.getValue();
             Rectangle rectangle = new Rectangle(position.getX(), position.getY(), 50, 50);
+            rectangle.setStroke(Color.BLACK);
             try {
                 Block block = tile.getTopBlock();
                 switch (block.getBlockType()) {
