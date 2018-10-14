@@ -85,11 +85,12 @@ public class MainApplication extends Application {
             Action northAction;
             if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
                 northAction = new Action(Action.MOVE_BUILDER, "north");
+                if (!alertRespMsgAfterProcessedAction(northAction, "Moved")) return;
+                STARTING_Y += 50;
             } else {
                 northAction = new Action(Action.MOVE_BLOCK, "north");
+                if (!alertRespMsgAfterProcessedAction(northAction, "Moved")) return;
             }
-            if (!alertRespMsgAfterProcessedAction(northAction, "Moved")) return;
-            STARTING_Y += 50;
             inventory.setText(builderInventory(worldMap));
             displayMap(worldMap, disPane);
         });
@@ -103,11 +104,12 @@ public class MainApplication extends Application {
             Action eastAction;
             if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
                 eastAction = new Action(Action.MOVE_BUILDER, "east");
+                if (!alertRespMsgAfterProcessedAction(eastAction, "Moved")) return;
+                STARTING_X -= 50;
             } else {
                 eastAction = new Action(Action.MOVE_BLOCK, "east");
+                if (!alertRespMsgAfterProcessedAction(eastAction, "Moved")) return;
             }
-            if (!alertRespMsgAfterProcessedAction(eastAction, "Moved")) return;
-            STARTING_X -= 50;
             inventory.setText(builderInventory(worldMap));
             displayMap(worldMap, disPane);
         });
@@ -121,11 +123,12 @@ public class MainApplication extends Application {
             Action southAction;
             if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
                 southAction = new Action(Action.MOVE_BUILDER, "south");
+                if (!alertRespMsgAfterProcessedAction(southAction, "Moved")) return;
+                STARTING_Y -= 50;
             } else {
                 southAction = new Action(Action.MOVE_BLOCK, "south");
+                if (!alertRespMsgAfterProcessedAction(southAction, "Moved")) return;
             }
-            if (!alertRespMsgAfterProcessedAction(southAction, "Moved")) return;
-            STARTING_Y -= 50;
             inventory.setText(builderInventory(worldMap));
             displayMap(worldMap, disPane);
         });
@@ -139,11 +142,12 @@ public class MainApplication extends Application {
             Action westAction;
             if ("Move Builder".equals(choiceBox.getSelectionModel().selectedItemProperty().getValue())) {
                 westAction = new Action(Action.MOVE_BUILDER, "west");
+                if (!alertRespMsgAfterProcessedAction(westAction, "Moved")) return;
+                STARTING_X += 50;
             } else {
                 westAction = new Action(Action.MOVE_BLOCK, "west");
+                if (!alertRespMsgAfterProcessedAction(westAction, "Moved")) return;
             }
-            if (!alertRespMsgAfterProcessedAction(westAction, "Moved")) return;
-            STARTING_X += 50;
             inventory.setText(builderInventory(worldMap));
             displayMap(worldMap, disPane);
         });
