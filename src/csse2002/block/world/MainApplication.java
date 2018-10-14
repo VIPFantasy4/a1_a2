@@ -33,7 +33,7 @@ import java.util.Map;
 public class MainApplication extends Application {
     private File file;
     private WorldMap worldMap;
-    Map<Tile,Position> tilePosition = new HashMap<>();
+    Map<Tile, Position> tilePosition = new HashMap<>();
 
     public static void main(String[] args) {
         launch(MainApplication.class, args);
@@ -198,8 +198,6 @@ public class MainApplication extends Application {
         otherBox.getChildren().addAll(choiceHBox, digHBox, dropHBox);
         dirPane.setBottom(otherBox);
 
-
-
         /* File Menu */
         MenuBar menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
@@ -212,7 +210,7 @@ public class MainApplication extends Application {
                     setDisable(false, disPane, dirPane);
                     inventoryText.setText("Builder Inventory:");
                     inventory.setText(builderInventory(worldMap));
-                    displayMap(worldMap,disPane);
+                    displayMap(worldMap, disPane);
                     alertSuccessMsg("map is successfully loaded");
                 } catch (WorldMapFormatException | WorldMapInconsistentException | FileNotFoundException e) {
                     alert(e.getMessage());
@@ -263,6 +261,7 @@ public class MainApplication extends Application {
         alert.setContentText(msg);
         alert.showAndWait();
     }
+
     private void alertSuccessMsg(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
@@ -270,12 +269,12 @@ public class MainApplication extends Application {
         alert.showAndWait();
     }
 
-    private String builderInventory(WorldMap worldMap){
+    private String builderInventory(WorldMap worldMap) {
         List<Block> inventorys = worldMap.getBuilder().getInventory();
         String currentIventory = "";
-        for (int i = 0; i < inventorys.size(); i++){
+        for (int i = 0; i < inventorys.size(); i++) {
             Block block = inventorys.get(i);
-            if (i == inventorys.size() - 1){
+            if (i == inventorys.size() - 1) {
                 currentIventory = currentIventory + block.getBlockType();
                 break;
             }
@@ -285,46 +284,46 @@ public class MainApplication extends Application {
         return currentIventory;
     }
 
-    private void displayMap(WorldMap worldMap,BorderPane disPane){
+    private void displayMap(WorldMap worldMap, BorderPane disPane) {
         int startX = 4 * 50 + 30 - worldMap.getStartPosition().getX() * 50;
         int startY = 4 * 50 + 30 - worldMap.getStartPosition().getY() * 50;
         List<Tile> tiles = worldMap.getTiles();
-        tilePosition.put(tiles.get(0),new Position(startX,startY));
-        for (int i = 0; i < tiles.size(); i++){
+        tilePosition.put(tiles.get(0), new Position(startX, startY));
+        for (int i = 0; i < tiles.size(); i++) {
             Tile tile = tiles.get(i);
             Position position = tilePosition.get(tile);
             Map<String, Tile> exits = tile.getExits();
-            if (exits != null && exits.size() > 0){
-                Iterator<Map.Entry<String,Tile>> iterator = exits.entrySet().iterator();
-                while (iterator.hasNext()){
-                    Map.Entry<String,Tile> exit = iterator.next();
-                    switch (exit.getKey()){
+            if (exits != null && exits.size() > 0) {
+                Iterator<Map.Entry<String, Tile>> iterator = exits.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, Tile> exit = iterator.next();
+                    switch (exit.getKey()) {
                         case "north":
-                            tilePosition.put(exit.getValue(),new Position(position.getX(),position.getY() - 50 ));
+                            tilePosition.put(exit.getValue(), new Position(position.getX(), position.getY() - 50));
                             break;
                         case "east":
-                            tilePosition.put(exit.getValue(),new Position(position.getX() + 50,position.getY()));
+                            tilePosition.put(exit.getValue(), new Position(position.getX() + 50, position.getY()));
                             break;
                         case "south":
-                            tilePosition.put(exit.getValue(),new Position(position.getX(),position.getY() + 50 ));
+                            tilePosition.put(exit.getValue(), new Position(position.getX(), position.getY() + 50));
                             break;
                         case "west":
-                            tilePosition.put(exit.getValue(),new Position(position.getX() - 50,position.getY()));
+                            tilePosition.put(exit.getValue(), new Position(position.getX() - 50, position.getY()));
                             break;
                         default:
                     }
                 }
             }
         }
-        Iterator<Map.Entry<Tile,Position>> iterator = tilePosition.entrySet().iterator();
-        while (iterator.hasNext()){
-            Map.Entry<Tile,Position> entry = iterator.next();
+        Iterator<Map.Entry<Tile, Position>> iterator = tilePosition.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Tile, Position> entry = iterator.next();
             Tile tile = entry.getKey();
             Position position = entry.getValue();
-            Rectangle rectangle = new Rectangle(position.getX(),position.getY(),50,50);
+            Rectangle rectangle = new Rectangle(position.getX(), position.getY(), 50, 50);
             try {
                 Block block = tile.getTopBlock();
-                switch (block.getBlockType()){
+                switch (block.getBlockType()) {
                     case "grass":
                         rectangle.setFill(Color.GREEN);
                         break;
