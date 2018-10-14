@@ -20,9 +20,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,9 +89,8 @@ public class MainApplication extends Application {
             } else {
                 northAction = new Action(Action.MOVE_BLOCK, "north");
             }
-            Action.processAction(northAction, worldMap);
+            if (!alertRespMsgAfterProcessedAction(northAction, "Moved")) return;
             inventory.setText(builderInventory(worldMap));
-            //TODO:卧槽，里面catch异常了，在这怎么输出错误信息??????(下同)
         });
 
         /* east button */
@@ -108,7 +105,7 @@ public class MainApplication extends Application {
             } else {
                 eastAction = new Action(Action.MOVE_BLOCK, "east");
             }
-            Action.processAction(eastAction, worldMap);
+            if (!alertRespMsgAfterProcessedAction(eastAction, "Moved")) return;
             inventory.setText(builderInventory(worldMap));
         });
 
@@ -124,7 +121,7 @@ public class MainApplication extends Application {
             } else {
                 southAction = new Action(Action.MOVE_BLOCK, "south");
             }
-            Action.processAction(southAction, worldMap);
+            if (!alertRespMsgAfterProcessedAction(southAction, "Moved")) return;
             inventory.setText(builderInventory(worldMap));
         });
 
@@ -140,7 +137,7 @@ public class MainApplication extends Application {
             } else {
                 westAction = new Action(Action.MOVE_BLOCK, "west");
             }
-            Action.processAction(westAction, worldMap);
+            if (!alertRespMsgAfterProcessedAction(westAction, "Moved")) return;
             inventory.setText(builderInventory(worldMap));
         });
 
@@ -150,7 +147,7 @@ public class MainApplication extends Application {
         digButton.setTextFill(Color.WHITE);
         digButton.setOnAction(event -> {
             Action digAction = new Action(Action.DIG, "");
-            Action.processAction(digAction, worldMap);
+            if (!alertRespMsgAfterProcessedAction(digAction, "Top")) return;
             inventory.setText(builderInventory(worldMap));
         });
 
@@ -164,7 +161,7 @@ public class MainApplication extends Application {
         dropButton.setTextFill(Color.WHITE);
         dropButton.setOnAction(event -> {
             Action dropAction = new Action(Action.DROP, dropIndexField.getText());
-            Action.processAction(dropAction, worldMap);
+            if (!alertRespMsgAfterProcessedAction(dropAction, "Dropped")) return;
             inventory.setText(builderInventory(worldMap));
         });
 
@@ -271,6 +268,20 @@ public class MainApplication extends Application {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private boolean alertRespMsgAfterProcessedAction(Action action, String pattern) {
+        OutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+        Action.processAction(action, worldMap);
+        String respMsg;
+        if ((respMsg = outputStream.toString().trim()).startsWith(pattern)) {
+            alertInformation(respMsg);
+            return true;
+        } else {
+            alertError(respMsg);
+            return false;
+        }
     }
 
     private String builderInventory(WorldMap worldMap) {
