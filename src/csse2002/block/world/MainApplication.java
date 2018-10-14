@@ -364,9 +364,12 @@ public class MainApplication extends Application {
             } catch (TooLowException e) {
                 rectangle.setFill(Color.TRANSPARENT);
             }
-            //TODO:怎么在矩形加文字和三角，block个数为tile.getBlocks().size(),出口根据 tile.getExits()画，builder初始化其实坐标块
+            //TODO:怎么在矩形加三角出口根据 tile.getExits()画
             // TODO: 越界的不画出来 写个判断
-            disPane.getChildren().add(rectangle);
+            Text quantity = new Text(position.getX() + 4, position.getY() + 16, tile.getBlocks().size() + "");
+            quantity.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+            quantity.setFill(Color.LIGHTBLUE);
+            disPane.getChildren().addAll(rectangle, quantity);
         }
         Circle builder = new Circle(255, 255, 5, Color.YELLOW);
         builder.setStroke(Color.BLACK);
