@@ -12,6 +12,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -346,34 +347,71 @@ public class MainApplication extends Application {
         for (Map.Entry<Tile, Position> entry : tilePosition.entrySet()) {
             Tile tile = entry.getKey();
             Position position = entry.getValue();
-            Rectangle rectangle = new Rectangle(position.getX(), position.getY(), 50, 50);
-            rectangle.setStroke(Color.BLACK);
-            try {
-                Block block = tile.getTopBlock();
-                switch (block.getBlockType()) {
-                    case "grass":
-                        rectangle.setFill(Color.GREEN);
-                        break;
-                    case "soil":
-                        rectangle.setFill(Color.BLACK);
-                        break;
-                    case "stone":
-                        rectangle.setFill(Color.GRAY);
-                        break;
-                    case "wood":
-                        rectangle.setFill(Color.BROWN);
-                        break;
-                    default:
+            if (!(position.getX() < 80 || position.getX() > 430 || position.getY() <80 || position.getY() > 430)){
+                Rectangle rectangle = new Rectangle(position.getX(), position.getY(), 50, 50);
+                rectangle.setStroke(Color.BLACK);
+                try {
+                    Block block = tile.getTopBlock();
+                    switch (block.getBlockType()) {
+                        case "grass":
+                            rectangle.setFill(Color.GREEN);
+                            break;
+                        case "soil":
+                            rectangle.setFill(Color.BLACK);
+                            break;
+                        case "stone":
+                            rectangle.setFill(Color.GRAY);
+                            break;
+                        case "wood":
+                            rectangle.setFill(Color.BROWN);
+                            break;
+                        default:
+                    }
+                } catch (TooLowException e) {
+                    rectangle.setFill(Color.TRANSPARENT);
                 }
-            } catch (TooLowException e) {
-                rectangle.setFill(Color.TRANSPARENT);
+                Map<String,Tile> exitMap = tile.getExits();
+                Polygon northExitPolygon = new Polygon();
+                Polygon eastExitPolygon = new Polygon();
+                Polygon southExitPolygon = new Polygon();
+                Polygon westExitPolygon = new Polygon();
+                if (exitMap.get("north") != null){
+                    northExitPolygon.getPoints().addAll(new Double[]{
+                            position.getX() + 25.0,(double) position.getY(),
+                            position.getX() + 20.0,position.getY() + 5.0,
+                            position.getX() + 30.0,position.getY() + 5.0
+                    });
+                    northExitPolygon.setFill(Color.LIGHTBLUE);
+                }
+                if (exitMap.get("east") != null){
+                    eastExitPolygon.getPoints().addAll(new Double[]{
+                            position.getX() + 50.0,(double) position.getY() + 25.0,
+                            position.getX() + 45.0,position.getY() + 20.0,
+                            position.getX() + 45.0,position.getY() + 30.0
+                    });
+                    eastExitPolygon.setFill(Color.LIGHTBLUE);
+                }
+                if (exitMap.get("south") != null){
+                    southExitPolygon.getPoints().addAll(new Double[]{
+                            position.getX() + 25.0,position.getY() + 50.0,
+                            position.getX() + 20.0,position.getY() + 45.0,
+                            position.getX() + 30.0,position.getY() + 45.0
+                    });
+                    southExitPolygon.setFill(Color.LIGHTBLUE);
+                }
+                if (exitMap.get("west") != null){
+                    westExitPolygon.getPoints().addAll(new Double[]{
+                            (double)position.getX(),position.getY() + 25.0,
+                            position.getX() + 5.0,position.getY() + 20.0,
+                            position.getX() + 5.0,position.getY() + 30.0
+                    });
+                    westExitPolygon.setFill(Color.LIGHTBLUE);
+                }
+                Text quantity = new Text(position.getX() + 4, position.getY() + 16, tile.getBlocks().size() + "");
+                quantity.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+                quantity.setFill(Color.LIGHTBLUE);
+                disPane.getChildren().addAll(rectangle, quantity,northExitPolygon,eastExitPolygon,southExitPolygon,westExitPolygon);
             }
-            //TODO:怎么在矩形加三角出口根据 tile.getExits()画
-            // TODO: 越界的不画出来 写个判断
-            Text quantity = new Text(position.getX() + 4, position.getY() + 16, tile.getBlocks().size() + "");
-            quantity.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-            quantity.setFill(Color.LIGHTBLUE);
-            disPane.getChildren().addAll(rectangle, quantity);
         }
         Circle builder = new Circle(255, 255, 5, Color.YELLOW);
         builder.setStroke(Color.BLACK);
