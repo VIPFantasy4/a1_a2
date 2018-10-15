@@ -284,12 +284,12 @@ public class MainApplication extends Application {
         alert.showAndWait();
     }
 
-    private boolean alertRespMsgAfterProcessedAction(Action action, String pattern) {
+    private boolean alertRespMsgAfterProcessedAction(Action action, String prefix) {
         OutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
         Action.processAction(action, worldMap);
         String respMsg;
-        if ((respMsg = outputStream.toString().trim()).startsWith(pattern)) {
+        if ((respMsg = outputStream.toString().trim()).startsWith(prefix)) {
             alertInformation(respMsg);
             return true;
         } else {
