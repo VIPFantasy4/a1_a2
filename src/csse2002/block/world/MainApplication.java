@@ -47,7 +47,6 @@ public class MainApplication extends Application {
 
         /* display area */
         BorderPane disPane = new BorderPane();
-        disPane.setStyle("-fx-border-color: red");  // highlight for debugging
         Rectangle border = new Rectangle(30, 30, 50 * 9, 50 * 9);
         border.setFill(Color.TRANSPARENT);
         border.setStroke(Color.BLACK);
@@ -67,7 +66,6 @@ public class MainApplication extends Application {
         /* direction area */
         BorderPane dirPane = new BorderPane();
         dirPane.setPadding(new Insets(45, 60, 180, 0));
-        dirPane.setStyle("-fx-border-color: yellow");  // highlight for debugging
         root.setRight(dirPane);
 
         /* move choice */
@@ -181,26 +179,22 @@ public class MainApplication extends Application {
 
         /* locate north and locate south */
         VBox cenBox = new VBox();
-        cenBox.setStyle("-fx-border-color: greenyellow");
         cenBox.setSpacing(40);
         cenBox.getChildren().addAll(northButton, southButton);
         dirPane.setCenter(cenBox);
         /* locate west */
         VBox leftBox = new VBox();
-        leftBox.setStyle("-fx-border-color: blue");
         leftBox.setPadding(new Insets(40, 0, 0, 0));
         leftBox.getChildren().add(westButton);
         dirPane.setLeft(leftBox);
         /* locate east */
         VBox rightBox = new VBox();
-        rightBox.setStyle("-fx-border-color: deeppink");
         rightBox.getChildren().add(eastButton);
         rightBox.setPadding(new Insets(40, 0, 0, 0));
         dirPane.setRight(rightBox);
 
         /* fix choiceBox, digButton, dropButton and dropIndexField */
         VBox otherBox = new VBox();
-        otherBox.setStyle("-fx-border-color: coral");
         otherBox.setSpacing(20);
         HBox choiceHBox = new HBox();
         choiceHBox.setPadding(new Insets(0, 0, 0, 50));
