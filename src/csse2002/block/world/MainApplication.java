@@ -30,8 +30,8 @@ import java.util.Map;
  * Created by Administrator on 2018/10/8.
  */
 public class MainApplication extends Application {
-    public static int STARTING_X = 230;
-    public static int STARTING_Y = 230;
+    private static int STARTING_X = 230;
+    private static int STARTING_Y = 230;
 
 
     private WorldMap worldMap;
@@ -247,7 +247,7 @@ public class MainApplication extends Application {
                     }
                 }
             } else {
-                alertError("no file");
+                alertError("U gotta load the map first");
             }
         });
         MenuItem exitMenuItem = new MenuItem("Exit");
@@ -314,11 +314,8 @@ public class MainApplication extends Application {
     }
 
     private void displayMap(WorldMap worldMap, BorderPane disPane) {
-//        int STARTING_X = 230 - worldMap.getStartPosition().getX() * 50;
-//        int STARTING_Y = 230 - worldMap.getStartPosition().getY() * 50;
         tilePosition.clear();
         resetDisPane(disPane);
-        // TODO: 你看看是改这里面的XY还是改StartPosition里的XY然后去放到worldMap构造器我暂时先改这里面的XY 经过观察感觉要改position
         List<Tile> tiles = worldMap.getTiles();
         tilePosition.put(tiles.get(0), new Position(STARTING_X, STARTING_Y));
         for (Tile tile : tiles) {
@@ -339,7 +336,8 @@ public class MainApplication extends Application {
                         case "west":
                             tilePosition.put(exit.getValue(), new Position(position.getX() - 50, position.getY()));
                             break;
-//                        default:
+                        default:
+                            throw new RuntimeException("This is 2 real Xu Zhenzhen");
                     }
                 }
             }
@@ -377,7 +375,7 @@ public class MainApplication extends Application {
                 Polygon westExitPolygon = new Polygon();
                 Tile exit;
                 if ((exit = exits.get("north")) != null) {
-                    if (Math.abs(exit.getBlocks().size() - tile.getBlocks().size()) <= 1) {
+                    if (canEnter(tile, exit)) {
                         northExitPolygon.getPoints().addAll(position.getX() + 25.0, (double) position.getY(),
                                 position.getX() + 20.0, position.getY() + 5.0,
                                 position.getX() + 30.0, position.getY() + 5.0);
@@ -385,7 +383,7 @@ public class MainApplication extends Application {
                     }
                 }
                 if ((exit = exits.get("east")) != null) {
-                    if (Math.abs(exit.getBlocks().size() - tile.getBlocks().size()) <= 1) {
+                    if (canEnter(tile, exit)) {
                         eastExitPolygon.getPoints().addAll(position.getX() + 50.0, (double) position.getY() + 25.0,
                                 position.getX() + 45.0, position.getY() + 20.0,
                                 position.getX() + 45.0, position.getY() + 30.0);
@@ -393,7 +391,7 @@ public class MainApplication extends Application {
                     }
                 }
                 if ((exit = exits.get("south")) != null) {
-                    if (Math.abs(exit.getBlocks().size() - tile.getBlocks().size()) <= 1) {
+                    if (canEnter(tile, exit)) {
                         southExitPolygon.getPoints().addAll(position.getX() + 25.0, position.getY() + 50.0,
                                 position.getX() + 20.0, position.getY() + 45.0,
                                 position.getX() + 30.0, position.getY() + 45.0);
@@ -401,7 +399,7 @@ public class MainApplication extends Application {
                     }
                 }
                 if ((exit = exits.get("west")) != null) {
-                    if (Math.abs(exit.getBlocks().size() - tile.getBlocks().size()) <= 1) {
+                    if (canEnter(tile, exit)) {
                         westExitPolygon.getPoints().addAll((double) position.getX(), position.getY() + 25.0,
                                 position.getX() + 5.0, position.getY() + 20.0,
                                 position.getX() + 5.0, position.getY() + 30.0);
@@ -417,6 +415,10 @@ public class MainApplication extends Application {
         Circle builder = new Circle(255, 255, 5, Color.YELLOW);
         builder.setStroke(Color.BLACK);
         disPane.getChildren().add(builder);
+    }
+
+    private boolean canEnter(Tile tile, Tile exit) {
+        return Math.abs(exit.getBlocks().size() - tile.getBlocks().size()) <= 1;
     }
 
     private void resetDisPane(BorderPane disPane) {
