@@ -27,7 +27,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Administrator on 2018/10/8.
+ * The GUI will display the game world and have options for users to interact with the world.
+ * Now that we have developed a set of primitives to represent Tile, Block, and Builder and a way to
+ * create worlds and interact with it, we want to be able to:
+ * • launch a game window,
+ * • load world maps from the game window,
+ * • display the loaded map,
+ * • perform actions on the world by using control elements in the game window,
+ * • provide helpful messages to users on any failures,
+ * • display the updated world map once an action is performed, and
+ * • save the updated world map.
  */
 public class MainApplication extends Application {
     private static int STARTING_X = 230;
@@ -258,12 +267,23 @@ public class MainApplication extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Pane can not be processed anything before loading a world
+     *
+     * @param flag  permission of processing the panes
+     * @param nodes specified panes
+     */
     private void setDisable(boolean flag, Node... nodes) {
         for (Node node : nodes) {
             node.setDisable(flag);
         }
     }
 
+    /**
+     * Alert the error occurred on world
+     *
+     * @param msg error message
+     */
     private void alertError(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
@@ -271,6 +291,11 @@ public class MainApplication extends Application {
         alert.showAndWait();
     }
 
+    /**
+     * Alert the information noticed by world
+     *
+     * @param msg information message
+     */
     private void alertInformation(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
@@ -278,6 +303,13 @@ public class MainApplication extends Application {
         alert.showAndWait();
     }
 
+    /**
+     * Process the given action and alert the message according to System.out
+     *
+     * @param action the action gonna process
+     * @param prefix pattern used for verifying
+     * @return true if the action was processed successfully, false if not
+     */
     private boolean alertRespMsgAfterProcessedAction(Action action, String prefix) {
         OutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
@@ -292,6 +324,12 @@ public class MainApplication extends Application {
         }
     }
 
+    /**
+     * Draw builder's inventory
+     *
+     * @param worldMap current world
+     * @return a string rep builder's inventory
+     */
     private String builderInventory(WorldMap worldMap) {
         List<Block> inventory = worldMap.getBuilder().getInventory();
         StringBuilder currentInventory = new StringBuilder();
@@ -307,8 +345,16 @@ public class MainApplication extends Application {
         return currentInventory.toString();
     }
 
+    /**
+     * Draw the graphic world
+     * We fixed the position of the starting tile at (STARTING_X, STARTING_Y)(default (230, 230) but it needs to change after processed MOVE_BUILDER action)
+     * And recall this method for refresh the graphic world map
+     *
+     * @param worldMap current world
+     * @param disPane  pane used for displaying world
+     */
     private void displayMap(WorldMap worldMap, BorderPane disPane) {
-        tilePosition.clear();
+        tilePosition.clear();  // gotta clear the previous at first
         resetDisPane(disPane);
         List<Tile> tiles = worldMap.getTiles();
         tilePosition.put(tiles.get(0), new Position(STARTING_X, STARTING_Y));
@@ -415,6 +461,11 @@ public class MainApplication extends Application {
         return Math.abs(exit.getBlocks().size() - tile.getBlocks().size()) <= 1;
     }
 
+    /**
+     * Clear all shapes on the pane and redraw a border for it
+     *
+     * @param disPane the given pan
+     */
     private void resetDisPane(BorderPane disPane) {
         disPane.getChildren().clear();
         Rectangle border = new Rectangle(30, 30, 50 * 9, 50 * 9);
